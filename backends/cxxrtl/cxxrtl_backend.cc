@@ -200,7 +200,7 @@ bool is_extending_cell(RTLIL::IdString type)
 bool is_inlinable_cell(RTLIL::IdString type)
 {
 	return is_unary_cell(type) || is_binary_cell(type) || type.in(
-		ID($mux), ID($concat), ID($slice), ID($pmux), ID($bmux), ID($demux));
+		ID($mux), ID($concat), ID($slice), ID($pmux), ID($bmux), ID($demux), ID($bwmux));
 }
 
 bool is_ff_cell(RTLIL::IdString type)
@@ -616,7 +616,7 @@ std::string escape_c_string(const std::string &input)
 				output.push_back('\\');
 			output.push_back(c);
 		} else {
-			char l = c & 0x3, m = (c >> 3) & 0x3, h = (c >> 6) & 0x3;
+			char l = c & 0x7, m = (c >> 3) & 0x7, h = (c >> 6) & 0x3;
 			output.append("\\");
 			output.push_back('0' + h);
 			output.push_back('0' + m);
@@ -1196,6 +1196,14 @@ struct CxxrtlWorker {
 			f << ".bmux<";
 			f << cell->getParam(ID::WIDTH).as_int();
 			f << ">(";
+			dump_sigspec_rhs(cell->getPort(ID::S), for_debug);
+			f << ").val()";
+		// Bitwise muxes
+		} else if (cell->type == ID($bwmux)) {
+			dump_sigspec_rhs(cell->getPort(ID::A), for_debug);
+			f << ".bwmux(";
+			dump_sigspec_rhs(cell->getPort(ID::B), for_debug);
+			f << ",";
 			dump_sigspec_rhs(cell->getPort(ID::S), for_debug);
 			f << ").val()";
 		// Demuxes
@@ -2402,7 +2410,12 @@ struct CxxrtlWorker {
 						auto cell_attrs = scopeinfo_attributes(cell, ScopeinfoAttrs::Cell);
 						cell_attrs.erase(ID::module_not_derived);
 						f << indent << "scopes->add(path, " << escape_cxx_string(get_hdl_name(cell)) << ", ";
-						f << escape_cxx_string(cell->get_string_attribute(ID(module))) << ", ";
+						if (module_attrs.count(ID(hdlname))) {
+							f << escape_cxx_string(module_attrs.at(ID(hdlname)).decode_string());
+						} else {
+							f << escape_cxx_string(cell->get_string_attribute(ID(module)));
+						}
+						f << ", ";
 						dump_serialized_metadata(module_attrs);
 						f << ", ";
 						dump_serialized_metadata(cell_attrs);
@@ -2416,14 +2429,15 @@ struct CxxrtlWorker {
 			inc_indent();
 				for (auto wire : module->wires()) {
 					const auto &debug_wire_type = debug_wire_types[wire];
-					if (!wire->name.isPublic())
-						continue;
 					count_public_wires++;
 					switch (debug_wire_type.type) {
 						case WireType::BUFFERED:
 						case WireType::MEMBER: {
 							// Member wire
 							std::vector<std::string> flags;
+
+							if (!wire->name.isPublic())
+								flags.push_back("GENERATED");
 
 							if (wire->port_input && wire->port_output)
 								flags.push_back("INOUT");

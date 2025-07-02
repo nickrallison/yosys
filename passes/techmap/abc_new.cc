@@ -68,6 +68,7 @@ struct AbcNewPass : public ScriptPass {
 		log("    -constr <file>\n");
 		log("    -dont_use <cell_name>\n");
 		log("    -liberty <file>\n");
+		log("    -genlib <file>\n");
 		log("        these options are passed on to the 'abc9_exe' command which invokes\n");
 		log("        the ABC tool on individual modules of the design. please see\n");
 		log("        'help abc9_exe' for more details\n");
@@ -90,7 +91,7 @@ struct AbcNewPass : public ScriptPass {
 			if (args[argidx] == "-exe" || args[argidx] == "-script" ||
 					args[argidx] == "-D" ||
 					args[argidx] == "-constr" || args[argidx] == "-dont_use" ||
-					args[argidx] == "-liberty") {
+					args[argidx] == "-liberty" || args[argidx] == "-genlib") {
 				abc_exe_options += " " + args[argidx] + " " + args[argidx + 1];
 				argidx++;
 			} else if (args[argidx] == "-run" && argidx + 1 < args.size()) {
@@ -139,7 +140,7 @@ struct AbcNewPass : public ScriptPass {
 			if (!help_mode) {
 				selected_modules = order_modules(active_design,
 												 active_design->selected_whole_modules_warn());
-				active_design->selection_stack.emplace_back(false);
+				active_design->push_empty_selection();
 			} else {
 				selected_modules = {nullptr};
 				run("foreach module in selection");
@@ -157,7 +158,7 @@ struct AbcNewPass : public ScriptPass {
 					exe_options = abc_exe_options;
 					log_header(active_design, "Mapping module '%s'.\n", log_id(mod));
 					log_push();
-					active_design->selection().select(mod);
+					active_design->select(mod);
 				}
 
 				std::string script_save;
@@ -194,7 +195,7 @@ struct AbcNewPass : public ScriptPass {
 			}
 
 			if (!help_mode) {
-				active_design->selection_stack.pop_back();
+				active_design->pop_selection();
 			}
 		}
 	}

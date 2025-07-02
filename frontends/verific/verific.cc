@@ -21,6 +21,7 @@
 #include "kernel/sigtools.h"
 #include "kernel/celltypes.h"
 #include "kernel/log.h"
+#include "kernel/utils.h"
 #include "libs/sha1/sha1.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -1445,6 +1446,25 @@ void VerificImporter::import_netlist(RTLIL::Design *design, Netlist *nl, std::ma
 		module_name = "\\" + sha1_if_contain_spaces(module_name);
 	}
 
+	{
+		Array ram_nets ;
+		MapIter mem_mi;
+		Net *mem_net;
+		FOREACH_NET_OF_NETLIST(nl, mem_mi, mem_net)
+		{
+			if (!mem_net->IsRamNet()) continue ;
+
+			if (mem_net->GetAtt("mem2reg"))
+				ram_nets.Insert(mem_net) ;
+		}
+		unsigned i ;
+		FOREACH_ARRAY_ITEM(&ram_nets, i, mem_net) {
+			log("Bit blasting RAM for identifier '%s'\n", mem_net->Name());
+			mem_net->BlastNet();
+		}
+		nl->RemoveDanglingLogic(0);
+	}
+
 	netlist = nl;
 
 	if (design->has(module_name)) {
@@ -1537,6 +1557,8 @@ void VerificImporter::import_netlist(RTLIL::Design *design, Netlist *nl, std::ma
 		wire->start_offset = min(portbus->LeftIndex(), portbus->RightIndex());
 		wire->upto = portbus->IsUp();
 		import_attributes(wire->attributes, portbus, nl, portbus->Size());
+		if (portbus->Size() == 1)
+			wire->set_bool_attribute(ID::single_bit_vector);
 		SetIter si ;
 		Port *port ;
 		FOREACH_PORT_OF_PORTBUS(portbus, si, port) {
@@ -1735,6 +1757,8 @@ void VerificImporter::import_netlist(RTLIL::Design *design, Netlist *nl, std::ma
 				break;
 			}
 			import_attributes(wire->attributes, netbus, nl, netbus->Size());
+			if (netbus->Size() == 1)
+				wire->set_bool_attribute(ID::single_bit_vector);
 
 			RTLIL::Const initval = Const(State::Sx, GetSize(wire));
 			bool initval_valid = false;
@@ -3402,6 +3426,7 @@ struct VerificPass : public Pass {
 				veri_module->SetCompileAsBlackbox();
 			}
 		}
+		restore_blackbox_msg_state();
 	}
 #endif
 
@@ -3464,6 +3489,14 @@ struct VerificPass : public Pass {
 			// WARNING: instantiating unknown module 'XYZ' (VERI-1063)
 			Message::SetMessageType("VERI-1063", VERIFIC_ERROR);
 
+			// Downgrade warnings about things that are normal
+			// VERIFIC-WARNING [VERI-1209] foo.sv:98: expression size 7 truncated to fit in target size 6
+			Message::SetMessageType("VERI-1209", VERIFIC_INFO);
+			// VERIFIC-WARNING [VERI-1142] foo.sv:55: system task 'display' is ignored for synthesis
+			Message::SetMessageType("VERI-1142", VERIFIC_INFO);
+			// VERIFIC-WARNING [VERI-2418] foo.svh:503: parameter 'all_cfgs_gp' declared inside package 'bp_common_pkg' shall be treated as localparam
+			Message::SetMessageType("VERI-2418", VERIFIC_INFO);
+
 			// https://github.com/YosysHQ/yosys/issues/1055
 			RuntimeFlags::SetVar("veri_elaborate_top_level_modules_having_interface_ports", 1) ;
 #endif
@@ -3522,6 +3555,9 @@ struct VerificPass : public Pass {
 				} else if (Strings::compare(args[argidx].c_str(), "warnings")) {
 					Message::SetAllMessageType(VERIFIC_WARNING, new_type);
 				} else if (Strings::compare(args[argidx].c_str(), "infos")) {
+					Message::SetMessageType("VERI-1209", new_type);
+					Message::SetMessageType("VERI-1142", new_type);
+					Message::SetMessageType("VERI-2418", new_type);
 					Message::SetAllMessageType(VERIFIC_INFO, new_type);
 				} else if (Strings::compare(args[argidx].c_str(), "comments")) {
 					Message::SetAllMessageType(VERIFIC_COMMENT, new_type);
@@ -4298,7 +4334,7 @@ struct ReadPass : public Pass {
 		log("\n");
 		log("    read {-f|-F} <command-file>\n");
 		log("\n");
-		log("Load and execute the specified command file. (Requires Verific.)\n");
+		log("Load and execute the specified command file.\n");
 		log("Check verific command for more information about supported commands in file.\n");
 		log("\n");
 		log("\n");
@@ -4412,10 +4448,14 @@ struct ReadPass : public Pass {
 		if (args[1] == "-f" || args[1] == "-F") {
 			if (use_verific) {
 				args[0] = "verific";
-				Pass::call(design, args);
 			} else {
-				cmd_error(args, 1, "This version of Yosys is built without Verific support.\n");
+#if !defined(__wasm)
+				args[0] = "read_verilog_file_list";
+#else
+				cmd_error(args, 1, "Command files are not supported on this platform.\n");
+#endif
 			}
+			Pass::call(design, args);
 			return;
 		}
 

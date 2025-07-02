@@ -1433,6 +1433,7 @@ bool AstNode::simplify(bool const_fold, int stage, int width_hint, bool sign_hin
 				current_ast_mod->children.push_back(wnode);
 			}
 			basic_prep = true;
+			is_custom_type = false;
 		}
 		break;
 
@@ -1919,6 +1920,8 @@ bool AstNode::simplify(bool const_fold, int stage, int width_hint, bool sign_hin
 			if (!str.empty() && str[0] == '\\' && (template_node->type == AST_STRUCT || template_node->type == AST_UNION)) {
 				// replace instance with wire representing the packed structure
 				newNode = make_packed_struct(template_node, str, attributes);
+				if (newNode->attributes.count(ID::wiretype))
+					delete newNode->attributes[ID::wiretype];
 				newNode->set_attribute(ID::wiretype, mkconst_str(resolved_type_node->str));
 				// add original input/output attribute to resolved wire
 				newNode->is_input = this->is_input;
@@ -1930,6 +1933,8 @@ bool AstNode::simplify(bool const_fold, int stage, int width_hint, bool sign_hin
 			// Prepare replacement node.
 			newNode = template_node->clone();
 			newNode->str = str;
+			if (newNode->attributes.count(ID::wiretype))
+				delete newNode->attributes[ID::wiretype];
 			newNode->set_attribute(ID::wiretype, mkconst_str(resolved_type_node->str));
 			newNode->is_input = is_input;
 			newNode->is_output = is_output;
@@ -2082,6 +2087,8 @@ bool AstNode::simplify(bool const_fold, int stage, int width_hint, bool sign_hin
 					std::swap(range_left, range_right);
 					range_swapped = force_upto;
 				}
+				if (range_left == range_right && !attributes.count(ID::single_bit_vector))
+					set_attribute(ID::single_bit_vector, mkconst_int(1, false));
 			}
 		} else {
 			if (!range_valid)
@@ -2090,6 +2097,10 @@ bool AstNode::simplify(bool const_fold, int stage, int width_hint, bool sign_hin
 			range_swapped = false;
 			range_left = 0;
 			range_right = 0;
+			if (attributes.count(ID::single_bit_vector)) {
+				delete attributes[ID::single_bit_vector];
+				attributes.erase(ID::single_bit_vector);
+			}
 		}
 	}
 
@@ -4089,16 +4100,24 @@ skip_dynamic_range_lvalue_expansion:;
 						delete arg;
 						continue;
 					}
+
 					AstNode *wire_id = new AstNode(AST_IDENTIFIER);
 					wire_id->str = wire->str;
-					AstNode *assign = child->is_input ?
-							new AstNode(AST_ASSIGN_EQ, wire_id, arg) :
-							new AstNode(AST_ASSIGN_EQ, arg, wire_id);
-					assign->children[0]->was_checked = true;
-					if (child->is_input)
+
+					if (child->is_input) {
+						AstNode *assign = new AstNode(AST_ASSIGN_EQ, wire_id->clone(), arg->clone());
+						assign->children[0]->was_checked = true;
 						new_stmts.push_back(assign);
-					else
+					}
+
+					if (child->is_output) {
+						AstNode *assign = new AstNode(AST_ASSIGN_EQ, arg->clone(), wire_id->clone());
+						assign->children[0]->was_checked = true;
 						output_assignments.push_back(assign);
+					}
+
+					delete arg;
+					delete wire_id;
 				}
 			}
 

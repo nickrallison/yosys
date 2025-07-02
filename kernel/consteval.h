@@ -310,12 +310,12 @@ struct ConstEval
 				}
 			}
 		}
-		else if (cell->type == ID($macc))
+		else if (cell->type.in(ID($macc), ID($macc_v2)))
 		{
 			Macc macc;
 			macc.from_cell(cell);
 
-			for (auto &port : macc.ports) {
+			for (auto &port : macc.terms) {
 				if (!eval(port.in_a, undef, cell))
 					return false;
 				if (!eval(port.in_b, undef, cell))
