@@ -1,7 +1,8 @@
-add_library(yosys_backends_simplec INTERFACE)
-
-target_sources(yosys_backends_simplec INTERFACE
+add_library(Yosys::Backends::SimpleC OBJECT
     simplec.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_simplec)
+target_link_libraries(Yosys::Backends::SimpleC
+  PUBLIC
+    Yosys::Interface
+)

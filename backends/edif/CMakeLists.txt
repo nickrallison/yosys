@@ -1,7 +1,8 @@
-add_library(yosys_backends_edif INTERFACE)
-
-target_sources(yosys_backends_edif INTERFACE
+add_library(Yosys::Backends::Edif OBJECT
     edif.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_edif)
+target_link_libraries(Yosys::Backends::Edif
+  PUBLIC
+    Yosys::Interface
+)

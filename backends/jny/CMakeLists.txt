@@ -1,7 +1,8 @@
-add_library(yosys_backends_jny INTERFACE)
-
-target_sources(yosys_backends_jny INTERFACE
+add_library(Yosys::Backends::Jny OBJECT
     jny.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_jny)
+target_link_libraries(Yosys::Backends::Jny
+    PUBLIC
+        Yosys::Interface
+)

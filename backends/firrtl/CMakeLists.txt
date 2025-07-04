@@ -1,7 +1,8 @@
-add_library(yosys_backends_firrtl INTERFACE)
-
-target_sources(yosys_backends_firrtl INTERFACE
-    firrtl.cc
+add_library(Yosys::Backends::Firrtl OBJECT
+  firrtl.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_firrtl)
+target_link_libraries(Yosys::Backends::Firrtl
+  PUBLIC
+    Yosys::Interface
+)

@@ -185,6 +185,8 @@ target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Kernel>)
 add_subdirectory(libs)
 target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Libs>)
 
+#### Frontends ####
+
 add_subdirectory(frontends/aiger)
 target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Aiger>)
 
@@ -213,60 +215,167 @@ target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Rtlil>)
 target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::RtlilGen>)
 
 add_subdirectory(frontends/verific)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Verific>)
+
 add_subdirectory(frontends/verilog)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Verilog>)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::VerilogGen>)
+
+#### Backends ####
 
 add_subdirectory(backends/aiger)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Aiger>)
+
 add_subdirectory(backends/aiger2)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Aiger2>)
+
 add_subdirectory(backends/blif)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Blif>)
+
 add_subdirectory(backends/btor)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Btor>)
+
 add_subdirectory(backends/cxxrtl)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Cxxrtl>)
+
 add_subdirectory(backends/edif)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Edif>)
+
 add_subdirectory(backends/firrtl)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Firrtl>)
+
 add_subdirectory(backends/functional)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Functional>)
+
 add_subdirectory(backends/intersynth)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Intersynth>)
+
 add_subdirectory(backends/jny)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Jny>)
+
 add_subdirectory(backends/json)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Json>)
+
 add_subdirectory(backends/rtlil)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Rtlil>)
+
 add_subdirectory(backends/simplec)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::SimpleC>)
+
 add_subdirectory(backends/smt2)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Smt2>)
+
 add_subdirectory(backends/smv)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Smv>)
+
 add_subdirectory(backends/spice)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Spice>)
+
 add_subdirectory(backends/table)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Table>)
+
 add_subdirectory(backends/verilog)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Backends::Verilog>)
+
+#### Passes ####
 
 add_subdirectory(passes/cmds)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Cmds>)
+
 add_subdirectory(passes/equiv)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Equiv>)
+
 add_subdirectory(passes/fsm)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Fsm>)
+
 add_subdirectory(passes/hierarchy)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Hierarchy>)
+
 add_subdirectory(passes/memory)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Memory>)
+
 add_subdirectory(passes/opt)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Opt>)
+
 add_subdirectory(passes/pmgen)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Pmgen>)
+
 add_subdirectory(passes/proc)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Proc>)
+
 add_subdirectory(passes/sat)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Sat>)
+
 add_subdirectory(passes/techmap)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Techmap>)
+
 add_subdirectory(passes/tests)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Passes::Tests>)
+
+#### Techlibs ####
 
 add_subdirectory(techlibs/achronix)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Achronix>)
+
 add_subdirectory(techlibs/anlogic)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Anlogic>)
+
 add_subdirectory(techlibs/common)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Common>)
+
 add_subdirectory(techlibs/coolrunner2)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Coolrunner2>)
+
 add_subdirectory(techlibs/easic)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Easic>)
+
 add_subdirectory(techlibs/ecp5)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Ecp5>)
+
 add_subdirectory(techlibs/efinix)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Efinix>)
+
 add_subdirectory(techlibs/fabulous)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Fabulous>)
+
 add_subdirectory(techlibs/gatemate)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Gatemate>)
+
 add_subdirectory(techlibs/gowin)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Gowin>)
+
 add_subdirectory(techlibs/greenpak4)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Greenpak4>)
+
 add_subdirectory(techlibs/ice40)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Ice40>)
+
 add_subdirectory(techlibs/intel)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Intel>)
+
 add_subdirectory(techlibs/intel_alm)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::IntelAlm>)
+
 add_subdirectory(techlibs/lattice)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Lattice>)
+
 add_subdirectory(techlibs/microchip)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Microchip>)
+
 add_subdirectory(techlibs/nanoxplore)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Nanoxplore>)
+
 add_subdirectory(techlibs/nexus)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Nexus>)
+
 add_subdirectory(techlibs/quicklogic)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Quicklogic>)
+
 add_subdirectory(techlibs/sf2)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Sf2>)
+
 add_subdirectory(techlibs/xilinx)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Techlibs::Xilinx>)
 
 add_include_file("kernel" "kernel/binding.h")
 add_include_file("kernel" "kernel/bitpattern.h")

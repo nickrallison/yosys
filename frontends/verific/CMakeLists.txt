@@ -1,8 +1,13 @@
-add_library(yosys_frontends_verific INTERFACE)
-
-target_sources(yosys_frontends_verific INTERFACE
+set(YOSYS_FRONTENDS_VERIFIC_SOURCES
     verific.cc
     #verificsva.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_frontends_verific)
+add_library(Yosys::Frontends::Verific OBJECT
+    ${YOSYS_FRONTENDS_VERIFIC_SOURCES})
+
+
+target_link_libraries(Yosys::Frontends::Verific
+  PUBLIC
+    Yosys::Interface
+)

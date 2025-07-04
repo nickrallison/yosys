@@ -1,7 +1,8 @@
-add_library(yosys_backends_btor INTERFACE)
-
-target_sources(yosys_backends_btor INTERFACE
-    btor.cc
+add_library(Yosys::Backends::Btor OBJECT
+  btor.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_btor)
+target_link_libraries(Yosys::Backends::Btor
+  PUBLIC
+    Yosys::Interface
+)

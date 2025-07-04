@@ -1,7 +1,8 @@
-add_library(yosys_backends_blif INTERFACE)
-
-target_sources(yosys_backends_blif INTERFACE
+add_library(Yosys::Backends::Blif OBJECT
     blif.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_blif)
+target_link_libraries(Yosys::Backends::Blif
+  PUBLIC
+    Yosys::Interface
+)
