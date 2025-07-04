@@ -1,7 +1,8 @@
-add_library(yosys_backends_smv INTERFACE)
-
-target_sources(yosys_backends_smv INTERFACE
-    smv.cc
+add_library(Yosys::Backends::Smv OBJECT
+  smv.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_smv)
+target_link_libraries(Yosys::Backends::Smv
+  PUBLIC
+    Yosys::Interface
+)
