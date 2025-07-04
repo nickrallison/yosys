@@ -1,9 +1,14 @@
-add_library(yosys_passes_tests INTERFACE)
-
-target_sources(yosys_passes_tests INTERFACE
-    test_autotb.cc
-    test_cell.cc
-    test_abcloop.cc
+set(YOSYS_PASSES_TESTS_SOURCES
+  test_autotb.cc
+  test_cell.cc
+  test_abcloop.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_tests)
+add_library(Yosys::Passes::Tests OBJECT
+  ${YOSYS_PASSES_TESTS_SOURCES}
+)
+
+target_link_libraries(Yosys::Passes::Tests
+  PUBLIC
+    Yosys::Interface
+)

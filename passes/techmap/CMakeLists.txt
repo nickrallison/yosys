@@ -1,6 +1,4 @@
-add_library(yosys_passes_techmap INTERFACE)
-
-target_sources(yosys_passes_techmap INTERFACE
+add_library(Yosys::Passes::Techmap OBJECT
     flatten.cc
     techmap.cc
     simplemap.cc
@@ -43,8 +41,8 @@ target_sources(yosys_passes_techmap INTERFACE
     constmap.cc
 )
 
-if (ENABLE_ABC)
-    target_sources(yosys_passes_techmap INTERFACE
+if(ENABLE_ABC)
+    target_sources(Yosys::Passes::Techmap PRIVATE
         abc.cc
         abc9.cc
         abc9_exe.cc
@@ -53,9 +51,15 @@ if (ENABLE_ABC)
     )
 endif()
 
-target_link_libraries(yosys PUBLIC yosys_passes_techmap)
+target_link_libraries(Yosys::Passes::Techmap
+    PUBLIC
+        Yosys::Interface
+)
 
-if (NOT DISABLE_SPAWN)
-    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+if(NOT DISABLE_SPAWN)
     add_executable(yosys-filterlib filterlib.cc)
+    target_link_libraries(yosys-filterlib
+        PUBLIC
+            Yosys::Interface
+    )
 endif()

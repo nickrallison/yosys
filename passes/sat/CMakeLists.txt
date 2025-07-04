@@ -1,6 +1,4 @@
-add_library(yosys_passes_sat INTERFACE)
-
-target_sources(yosys_passes_sat INTERFACE
+set(YOSYS_PASSES_SAT_SOURCES
     sat.cc
     freduce.cc
     eval.cc
@@ -17,19 +15,25 @@ target_sources(yosys_passes_sat INTERFACE
     fminit.cc
     recover_names.cc
     synthprop.cc
-
 )
 
-if (ENABLE_ZLIB)
-target_sources(yosys_passes_sat INTERFACE
-    sim.cc
-)
+if(ENABLE_ZLIB)
+  list(APPEND YOSYS_PASSES_SAT_SOURCES
+       sim.cc
+  )
 endif()
 
-if (NOT DISABLE_SPAWN)
-target_sources(yosys_passes_sat INTERFACE
-    qbfsat.cc
-)
+if(NOT DISABLE_SPAWN)
+  list(APPEND YOSYS_PASSES_SAT_SOURCES
+       qbfsat.cc
+  )
 endif()
 
-target_link_libraries(yosys PUBLIC yosys_passes_sat)
+add_library(Yosys::Passes::Sat OBJECT
+  ${YOSYS_PASSES_SAT_SOURCES}
+)
+
+target_link_libraries(Yosys::Passes::Sat
+  PUBLIC
+    Yosys::Interface
+)

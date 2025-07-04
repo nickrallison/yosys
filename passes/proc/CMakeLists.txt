@@ -1,6 +1,4 @@
-add_library(yosys_passes_proc INTERFACE)
-
-target_sources(yosys_passes_proc INTERFACE
+set(YOSYS_PASSES_PROC_SOURCES
     proc.cc
     proc_prune.cc
     proc_clean.cc
@@ -14,4 +12,10 @@ target_sources(yosys_passes_proc INTERFACE
     proc_memwr.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_proc)
+add_library(Yosys::Passes::Proc OBJECT
+  ${YOSYS_PASSES_PROC_SOURCES}
+)
+
+target_link_libraries(Yosys::Passes::Proc
+  PUBLIC Yosys::Interface
+)
