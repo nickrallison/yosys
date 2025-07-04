@@ -1,4 +1,3 @@
-add_library(yosys_kernel INTERFACE)
 
 #if(CMAKE_PROJECT_VERSION_PATCH GREATER 0)
 #    set(YOSYS_VERSION "${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}+${CMAKE_PROJECT_VERSION_PATCH}")
@@ -19,75 +18,101 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.cc.in ${CMAKE_CURRENT_BINARY_DIR}/version.cc)
 
-target_sources(yosys_kernel INTERFACE
+set(YOSYS_KERNEL_SOURCES
     binding.cc
-    binding.h
-    bitpattern.h
     calc.cc
     cellaigs.cc
-    cellaigs.h
     celledges.cc
+    constids.inc
+    cost.cc
+    drivertools.cc
+    ff.cc
+    ffmerge.cc
+    fmt.cc
+    functional.cc
+    gzip.cc
+    io.cc
+    json.cc
+    log.cc
+    mem.cc
+    qcsat.cc
+    register.cc
+    rtlil.cc
+    satgen.cc
+    scopeinfo.cc
+    sexpr.cc
+    tclapi.cc
+    yosys.cc
+    yw.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/version.cc
+)
+
+set(YOSYS_KERNEL_HEADERS
+    binding.h
+    bitpattern.h
+    cellaigs.h
     celledges.h
     celltypes.h
     compute_graph.h
     consteval.h
     constids.inc
-    cost.cc
     cost.h
-    # driver.cc
-    drivertools.cc
     drivertools.h
-    ff.cc
     ff.h
     ffinit.h
-    ffmerge.cc
     ffmerge.h
-    fmt.cc
     fmt.h
-    functional.cc
     functional.h
-    gzip.cc
     gzip.h
     hashlib.h
-    io.cc
-    json.cc
     json.h
-    log.cc
     log.h
     macc.h
-    mem.cc
     mem.h
     modtools.h
-    qcsat.cc
     qcsat.h
-    register.cc
     register.h
-    rtlil.cc
     rtlil.h
-    satgen.cc
     satgen.h
-    scopeinfo.cc
     scopeinfo.h
-    sexpr.cc
     sexpr.h
     sigtools.h
-    tclapi.cc
     timinginfo.h
     topo_scc.h
     utils.h
-    ${CMAKE_CURRENT_BINARY_DIR}/version.cc
-    yosys.cc
     yosys_common.h
     yosys.h
-    yw.cc
     yw.h
 )
 
 if (ENABLE_ZLIB)
-target_sources(yosys_kernel INTERFACE
-    fstdata.cc
-    fstdata.h
-)
+    list(APPEND YOSYS_KERNEL_SOURCES fstdata.cc)
+    list(APPEND YOSYS_KERNEL_HEADERS fstdata.h)
 endif()
 
-target_link_libraries(yosys PUBLIC yosys_kernel)
+add_library(Yosys::Kernel OBJECT
+  ${YOSYS_KERNEL_SOURCES}
+)
+
+target_sources(Yosys::Kernel
+  FILE_SET HEADERS
+    TYPE    HEADERS
+    BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES   ${YOSYS_KERNEL_HEADERS}
+)
+
+target_include_directories(Yosys::Kernel
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:kernel>
+)
+
+target_link_libraries(Yosys::Kernel
+  PUBLIC
+    Yosys::Interface
+)
+
+install(
+  TARGETS Yosys::Kernel
+  FILE_SET HEADERS      DESTINATION kernel
+)

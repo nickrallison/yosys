@@ -1,7 +1,9 @@
-add_library(yosys_frontends_aiger2 INTERFACE)
-
-target_sources(yosys_frontends_aiger2 INTERFACE
+set(YOSYS_FRONTENDS_AIGER2_SOURCES
     xaiger.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_frontends_aiger2)
+add_library(Yosys::Frontends::Aiger2 OBJECT
+  ${YOSYS_FRONTENDS_AIGER2_SOURCES}
+)
+
+target_link_libraries(Yosys::Frontends::Aiger2 INTERFACE Yosys::Interface)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.23)
 project(yosys LANGUAGES CXX C)
 set(YOSYS_VER "0.50+1")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -44,7 +44,6 @@ option(DISABLE_ABC_THREADS "Disable ABC threading support" OFF)
 
 set(CXXSTD 17 CACHE STRING "C++ standard to use for the build")
 
-
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include(CheckCXXCompilerFlag)
@@ -74,18 +73,23 @@ find_package(FLEX 2.6 REQUIRED)
 find_package(BISON 3.0 REQUIRED)
 find_package(Python3 3.5 REQUIRED COMPONENTS Interpreter)
 
-add_library(yosys STATIC)
-#target_include_directories(yosys PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-#target_include_directories(yosys PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-#target_compile_definitions(yosys PUBLIC _YOSYS_)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(yosys PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+add_library(Yosys::Interface INTERFACE)
+add_library(Yosys::Objects OBJECT)
+add_library(Yosys::Shared SHARED EXCLUDE_FROM_ALL
+    $<TARGET_OBJECTS:Yosys::Objects>)
+add_executable(Yosys::Exe
+    kernel/driver.cc
+    $<TARGET_OBJECTS:Yosys::Objects>)
 
-add_compile_definitions(_YOSYS_)
-target_compile_definitions(yosys PUBLIC _YOSYS_)
+target_compile_definitions(Yosys::Interface INTERFACE _YOSYS_)
+
+target_link_libraries(Yosys::Shared PUBLIC Yosys::Interface)
+set_target_properties(Yosys::Shared PROPERTIES OUTPUT_NAME yosys)
+install(TARGETS Yosys::Shared
+        LIBRARY DESTINATION .)
+
+target_link_libraries(Yosys::Exe PUBLIC Yosys::Interface)
+set_target_properties(Yosys::Exe PROPERTIES OUTPUT_NAME yosys)
 
 if (ENABLE_READLINE AND ENABLE_EDITLINE)
     message(FATAL_ERROR "Not possible to enable both ENABLE_READLINE and ENABLE_EDITLINE")
@@ -93,31 +97,31 @@ endif()
 
 if (ENABLE_READLINE)
     find_package(Readline REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_READLINE)
-    target_link_libraries(yosys PUBLIC ${READLINE_LIBRARY})
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_READLINE)
+    target_link_libraries(Yosys::Interface INTERFACE ${READLINE_LIBRARY})
 endif()
 
 if (ENABLE_EDITLINE)
     find_package(Editline REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_EDITLINE)
-    target_link_libraries(yosys PUBLIC ${EDITLINE_LIBRARY})
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_EDITLINE)
+    target_link_libraries(Yosys::Interface INTERFACE ${EDITLINE_LIBRARY})
 endif()
 
 if (ENABLE_TCL)
     find_package(TCL 8.6 REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_TCL)
-    target_include_directories(yosys PUBLIC ${TCL_INCLUDE_PATH})
-    target_link_libraries(yosys PUBLIC ${TCL_LIBRARY})
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_TCL)
+    target_include_directories(Yosys::Interface INTERFACE ${TCL_INCLUDE_PATH})
+    target_link_libraries(Yosys::Interface INTERFACE ${TCL_LIBRARY})
 endif()
 
 if (ENABLE_ZLIB)
     find_package(ZLIB REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_ZLIB)
-    target_link_libraries(yosys PUBLIC ZLIB::ZLIB)
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_ZLIB)
+    target_link_libraries(Yosys::Interface INTERFACE ZLIB::ZLIB)
 endif()
 
 if (ENABLE_COVER)
-    add_compile_definitions(YOSYS_ENABLE_COVER)
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_COVER)
 endif()
 
 if (ENABLE_CCACHE)
@@ -143,23 +147,23 @@ if (ENABLE_SCCACHE)
 endif ()
 
 if (ENABLE_ABC)
-    add_compile_definitions(YOSYS_ENABLE_ABC)
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_ABC)
     if (LINK_ABC)
-        add_compile_definitions(YOSYS_LINK_ABC)
-        target_link_libraries(yosys PUBLIC $<TARGET_FILE:libabc>)
-        add_dependencies(yosys libabc)
+        target_compile_definitions(Yosys::Interface INTERFACE YOSYS_LINK_ABC)
+        target_link_libraries(Yosys::Interface INTERFACE $<TARGET_FILE:libabc>)
+        add_dependencies(Yosys::Interface libabc)
     endif()        
 endif()
 
 if (ENABLE_PLUGINS)
     find_package(LibFFI REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_PLUGINS)
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_ENABLE_PLUGINS)
     include_directories(${LIBFFI_INCLUDE_DIR})
-    target_link_libraries(yosys PUBLIC ${LIBFFI_LIBRARY})
+    target_link_libraries(Yosys::Interface INTERFACE ${LIBFFI_LIBRARY})
 endif()
 
 if (DISABLE_SPAWN)
-    add_compile_definitions(YOSYS_DISABLE_SPAWN)
+    target_compile_definitions(Yosys::Interface INTERFACE YOSYS_DISABLE_SPAWN)
 endif()
 
 function(add_share_file _dir _name)
@@ -176,11 +180,20 @@ endfunction()
 
 
 add_subdirectory(kernel)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Kernel>)
+
 add_subdirectory(libs)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Libs>)
 
 add_subdirectory(frontends/aiger)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Aiger>)
+
 add_subdirectory(frontends/aiger2)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Aiger2>)
+
 add_subdirectory(frontends/ast)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Ast>)
+
 add_subdirectory(frontends/blif)
 add_subdirectory(frontends/json)
 add_subdirectory(frontends/liberty)
@@ -291,16 +304,17 @@ endif()
 set_property(SOURCE kernel/log.cc APPEND PROPERTY COMPILE_DEFINITIONS YOSYS_SRC="${PROJECT_SOURCE_DIR}")
 
 if (ENABLE_LIBYOSYS)
-    add_library(yosys_shared SHARED)
-    target_link_libraries(yosys_shared PUBLIC yosys)
+    add_library(yosys_shared SHARED $<TARGET_OBJECTS:yosys>)
+    target_link_libraries(yosys_shared PUBLIC yosys-interface)
     set_target_properties(yosys_shared PROPERTIES OUTPUT_NAME yosys)
     install(TARGETS yosys_shared
             LIBRARY DESTINATION .)
 endif()
 
 add_executable(yosys_exe
-    kernel/driver.cc)
-target_link_libraries(yosys_exe PUBLIC yosys)
+    kernel/driver.cc
+    $<TARGET_OBJECTS:yosys>)
+target_link_libraries(yosys_exe PUBLIC yosys-interface)
 set_target_properties(yosys_exe PROPERTIES OUTPUT_NAME yosys)
 
 #### yosys-config setup ####
