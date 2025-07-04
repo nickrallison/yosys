@@ -195,10 +195,23 @@ add_subdirectory(frontends/ast)
 target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Ast>)
 
 add_subdirectory(frontends/blif)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Blif>)
+
 add_subdirectory(frontends/json)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Json>)
+
 add_subdirectory(frontends/liberty)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Liberty>)
+
 add_subdirectory(frontends/rpc)
+if (NOT DISABLE_SPAWN)
+    target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Rpc>)
+endif()
+
 add_subdirectory(frontends/rtlil)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::Rtlil>)
+target_sources(Yosys::Objects PRIVATE $<TARGET_OBJECTS:Yosys::Frontends::RtlilGen>)
+
 add_subdirectory(frontends/verific)
 add_subdirectory(frontends/verilog)
 

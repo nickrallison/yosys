@@ -1,7 +1,10 @@
-add_library(yosys_frontends_liberty INTERFACE)
-
-target_sources(yosys_frontends_liberty INTERFACE
+set(YOSYS_FRONTENDS_LIBERTY_SOURCES
     liberty.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_frontends_liberty)
+add_library(Yosys::Frontends::Liberty OBJECT
+  ${YOSYS_FRONTENDS_LIBERTY_SOURCES}
+)
+
+
+target_link_libraries(Yosys::Frontends::Liberty PUBLIC Yosys::Interface)
