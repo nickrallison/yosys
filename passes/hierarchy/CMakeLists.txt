@@ -1,10 +1,11 @@
-add_library(yosys_passes_hierarchy INTERFACE)
-
-target_sources(yosys_passes_hierarchy INTERFACE
+add_library(Yosys::Passes::Hierarchy OBJECT
     hierarchy.cc
     uniquify.cc
     submod.cc
     keep_hierarchy.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_hierarchy)
+target_link_libraries(Yosys::Passes::Hierarchy
+    PUBLIC
+        Yosys::Interface
+)

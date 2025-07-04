@@ -1,6 +1,4 @@
-add_library(yosys_passes_memory INTERFACE)
-
-target_sources(yosys_passes_memory INTERFACE
+set(YOSYS_PASSES_MEMORY_SOURCES
     memory.cc
     memory_dff.cc
     memory_share.cc
@@ -14,7 +12,31 @@ target_sources(yosys_passes_memory INTERFACE
     memory_libmap.cc
     memory_bmux2rom.cc
     memlib.cc
+)
+
+set(YOSYS_PASSES_MEMORY_HEADERS
     memlib.h
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_memory)
+add_library(Yosys::Passes::Memory OBJECT
+    ${YOSYS_PASSES_MEMORY_SOURCES}
+)
+
+# expose the public headers for install
+target_sources(Yosys::Passes::Memory
+  FILE_SET HEADERS
+    TYPE    HEADERS
+    BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES   ${YOSYS_PASSES_MEMORY_HEADERS}
+)
+
+target_link_libraries(Yosys::Passes::Memory
+  PUBLIC
+    Yosys::Interface
+)
+
+install(
+  TARGETS Yosys::Passes::Memory
+  FILE_SET HEADERS
+    DESTINATION passes/memory
+)

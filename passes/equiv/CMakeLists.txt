@@ -1,6 +1,4 @@
-add_library(yosys_passes_equiv INTERFACE)
-
-target_sources(yosys_passes_equiv INTERFACE
+set(YOSYS_PASSES_EQUIV_SOURCES
     equiv_make.cc
     equiv_miter.cc
     equiv_simple.cc
@@ -14,4 +12,11 @@ target_sources(yosys_passes_equiv INTERFACE
     equiv_opt.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_equiv)
+add_library(Yosys::Passes::Equiv OBJECT
+  ${YOSYS_PASSES_EQUIV_SOURCES}
+)
+
+target_link_libraries(Yosys::Passes::Equiv
+  PUBLIC
+    Yosys::Interface
+)

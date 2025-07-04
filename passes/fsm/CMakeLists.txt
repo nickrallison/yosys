@@ -1,6 +1,4 @@
-add_library(yosys_passes_fsm INTERFACE)
-
-target_sources(yosys_passes_fsm INTERFACE
+set(YOSYS_PASSES_FSM_SOURCES
     fsm.cc
     fsm_detect.cc
     fsm_extract.cc
@@ -10,7 +8,29 @@ target_sources(yosys_passes_fsm INTERFACE
     fsm_info.cc
     fsm_export.cc
     fsm_map.cc
+)
+
+set(YOSYS_PASSES_FSM_HEADERS
     fsmdata.h
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_fsm)
+add_library(Yosys::Passes::Fsm OBJECT
+    ${YOSYS_PASSES_FSM_SOURCES}
+)
+
+target_sources(Yosys::Passes::Fsm
+  FILE_SET HEADERS
+    TYPE    HEADERS
+    BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES   ${YOSYS_PASSES_FSM_HEADERS}
+)
+
+target_link_libraries(Yosys::Passes::Fsm
+  PUBLIC
+    Yosys::Interface
+)
+
+install(
+  TARGETS Yosys::Passes::Fsm
+  FILE_SET HEADERS      DESTINATION passes/fsm
+)

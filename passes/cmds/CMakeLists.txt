@@ -1,6 +1,4 @@
-add_library(yosys_passes_cmds INTERFACE)
-
-target_sources(yosys_passes_cmds INTERFACE
+set(YOSYS_PASSES_CMDS_SOURCES
     add.cc
     delete.cc
     design.cc
@@ -54,10 +52,17 @@ target_sources(yosys_passes_cmds INTERFACE
 )
 
 if (NOT DISABLE_SPAWN)
-target_sources(yosys_passes_cmds INTERFACE
+  list(APPEND YOSYS_PASSES_CMDS_SOURCES
     exec.cc
     bugpoint.cc
-)
+  )
 endif()
 
-target_link_libraries(yosys PUBLIC yosys_passes_cmds)
+add_library(Yosys::Passes::Cmds OBJECT
+  ${YOSYS_PASSES_CMDS_SOURCES}
+)
+
+target_link_libraries(Yosys::Passes::Cmds
+  PUBLIC
+    Yosys::Interface
+)
