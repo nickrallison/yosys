@@ -2,8 +2,82 @@
 List of major changes and improvements between releases
 =======================================================
 
-Yosys 0.50 .. Yosys 0.51-dev
+Yosys 0.55 .. Yosys 0.56-dev
 --------------------------
+
+Yosys 0.54 .. Yosys 0.55
+--------------------------
+ * Various
+    - read_verilog: Implemented SystemVerilog unique/priority if.
+    - "attrmap" pass is able to alter memory attributes.
+    - verific: Support SVA followed-by operator in cover mode.
+
+Yosys 0.53 .. Yosys 0.54
+--------------------------
+ * New commands and options
+    - Added "-genlib" option to "abc_new" and "abc9_exe" passes.
+    - Added "-verbose" and "-quiet" options to "libcache" pass.
+    - Added "-no-sort" option to "write_aiger" pass.
+
+ * Various
+    - Added "muldiv_c" peepopt.
+    - Accept (and ignore) SystemVerilog unique/priority if.
+    - "read_verilog" copy inout ports in and out of functions/tasks.
+    - Enable single-bit vector wires in RTLIL.
+
+ * Xilinx support
+    - Single-port URAM mapping to support memories 2048 x 144b 
+
+Yosys 0.52 .. Yosys 0.53
+--------------------------
+ * New commands and options
+    - Added "constmap" pass for technology mapping of coarse constant value.
+    - Added "timeest" pass to estimate the critical path in clock domain.
+    - Added "-blackbox" option to "cutpoint" pass to cut all instances of
+      blackboxes.
+    - Added "-noscopeinfo" option to "cutpoint" pass.
+    - Added "-nocleanup" option to "flatten" pass to prevent removal of
+      unused submodules.
+    - Added "-declockgate" option to "formalff" pass that turns clock
+      gating into clock enables.
+
+ * Various
+    - Added "$scopeinfo" cells to preserve information during "cutpoint" pass.
+    - Added dataflow tracking documentation.
+    - share: Restrict activation patterns to potentially relevant signal.
+    - liberty: More robust parsing.
+    - verific: bit blast RAM if using mem2reg attribute.
+
+Yosys 0.51 .. Yosys 0.52
+--------------------------
+ * New commands and options
+    - Added "-pattern-limit" option to "share" pass to limit analysis effort.
+    - Added "libcache" pass to control caching of technology library 
+      data parsed from liberty files.
+    - Added "read_verilog_file_list" to parse verilog file list.
+
+ * Various
+    - Added $macc_v2 cell.
+    - Improve lexer performance and zlib support for "read_liberty".
+    - opt_expr: optimize pow of 2 cells.
+
+
+Yosys 0.50 .. Yosys 0.51
+--------------------------
+ * New commands and options
+    - Added "abstract" pass to allow reducing and never increasing
+      the constraints on a circuit's behavior in a formal verification setting.
+
+ * Various
+    - "splitcells" pass now splits "aldff" cells.
+    - FunctionalIR documentation
+
+ * QuickLogic support
+    - Added IOFF inference for qlf_k6n10f
+
+ * Intel support
+    - Fixed RAM and DSP support.
+    - Overall performance improvement for "synth_intel".
 
 Yosys 0.49 .. Yosys 0.50
 --------------------------

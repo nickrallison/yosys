@@ -20,70 +20,12 @@
 #include "kernel/yosys.h"
 #include "kernel/satgen.h"
 #include "kernel/json.h"
+#include "kernel/gzip.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-
-#ifdef YOSYS_ENABLE_ZLIB
-#include <zlib.h>
-
-PRIVATE_NAMESPACE_BEGIN
-#define GZ_BUFFER_SIZE 8192
-void decompress_gzip(const std::string &filename, std::stringstream &out)
-{
-	char buffer[GZ_BUFFER_SIZE];
-	int bytes_read;
-	gzFile gzf = gzopen(filename.c_str(), "rb");
-	while(!gzeof(gzf)) {
-		bytes_read = gzread(gzf, reinterpret_cast<void *>(buffer), GZ_BUFFER_SIZE);
-		out.write(buffer, bytes_read);
-	}
-	gzclose(gzf);
-}
-
-/*
-An output stream that uses a stringbuf to buffer data internally,
-using zlib to write gzip-compressed data every time the stream is flushed.
-*/
-class gzip_ostream : public std::ostream  {
-public:
-	gzip_ostream() : std::ostream(nullptr)
-	{
-		rdbuf(&outbuf);
-	}
-	bool open(const std::string &filename)
-	{
-		return outbuf.open(filename);
-	}
-private:
-	class gzip_streambuf : public std::stringbuf {
-	public:
-		gzip_streambuf() { };
-		bool open(const std::string &filename)
-		{
-			gzf = gzopen(filename.c_str(), "wb");
-			return gzf != nullptr;
-		}
-		virtual int sync() override
-		{
-			gzwrite(gzf, reinterpret_cast<const void *>(str().c_str()), unsigned(str().size()));
-			str("");
-			return 0;
-		}
-		virtual ~gzip_streambuf()
-		{
-			sync();
-			gzclose(gzf);
-		}
-	private:
-		gzFile gzf = nullptr;
-	} outbuf;
-};
-PRIVATE_NAMESPACE_END
-
-#endif
 
 YOSYS_NAMESPACE_BEGIN
 
@@ -318,18 +260,18 @@ void Pass::call(RTLIL::Design *design, std::vector<std::string> args)
 	pass_register[args[0]]->execute(args, design);
 	pass_register[args[0]]->post_execute(state);
 	while (design->selection_stack.size() > orig_sel_stack_pos)
-		design->selection_stack.pop_back();
+		design->pop_selection();
 }
 
 void Pass::call_on_selection(RTLIL::Design *design, const RTLIL::Selection &selection, std::string command)
 {
 	std::string backup_selected_active_module = design->selected_active_module;
 	design->selected_active_module.clear();
-	design->selection_stack.push_back(selection);
+	design->push_selection(selection);
 
 	Pass::call(design, command);
 
-	design->selection_stack.pop_back();
+	design->pop_selection();
 	design->selected_active_module = backup_selected_active_module;
 }
 
@@ -337,11 +279,11 @@ void Pass::call_on_selection(RTLIL::Design *design, const RTLIL::Selection &sele
 {
 	std::string backup_selected_active_module = design->selected_active_module;
 	design->selected_active_module.clear();
-	design->selection_stack.push_back(selection);
+	design->push_selection(selection);
 
 	Pass::call(design, args);
 
-	design->selection_stack.pop_back();
+	design->pop_selection();
 	design->selected_active_module = backup_selected_active_module;
 }
 
@@ -349,12 +291,12 @@ void Pass::call_on_module(RTLIL::Design *design, RTLIL::Module *module, std::str
 {
 	std::string backup_selected_active_module = design->selected_active_module;
 	design->selected_active_module = module->name.str();
-	design->selection_stack.push_back(RTLIL::Selection(false));
-	design->selection_stack.back().select(module);
+	design->push_empty_selection();
+	design->select(module);
 
 	Pass::call(design, command);
 
-	design->selection_stack.pop_back();
+	design->pop_selection();
 	design->selected_active_module = backup_selected_active_module;
 }
 
@@ -362,12 +304,12 @@ void Pass::call_on_module(RTLIL::Design *design, RTLIL::Module *module, std::vec
 {
 	std::string backup_selected_active_module = design->selected_active_module;
 	design->selected_active_module = module->name.str();
-	design->selection_stack.push_back(RTLIL::Selection(false));
-	design->selection_stack.back().select(module);
+	design->push_empty_selection();
+	design->select(module);
 
 	Pass::call(design, args);
 
-	design->selection_stack.pop_back();
+	design->pop_selection();
 	design->selected_active_module = backup_selected_active_module;
 }
 
@@ -527,47 +469,9 @@ void Frontend::extra_args(std::istream *&f, std::string &filename, std::vector<s
 				next_args.insert(next_args.end(), args.begin(), args.begin()+argidx);
 				next_args.insert(next_args.end(), filenames.begin()+1, filenames.end());
 			}
-			std::ifstream *ff = new std::ifstream;
-			ff->open(filename.c_str(), bin_input ? std::ifstream::binary : std::ifstream::in);
 			yosys_input_files.insert(filename);
-			if (ff->fail()) {
-				delete ff;
-				ff = nullptr;
-			}
-			f = ff;
-			if (f != NULL) {
-				// Check for gzip magic
-				unsigned char magic[3];
-				int n = 0;
-				while (n < 3)
-				{
-					int c = ff->get();
-					if (c != EOF) {
-						magic[n] = (unsigned char) c;
-					}
-					n++;
-				}
-				if (n == 3 && magic[0] == 0x1f && magic[1] == 0x8b) {
-	#ifdef YOSYS_ENABLE_ZLIB
-					log("Found gzip magic in file `%s', decompressing using zlib.\n", filename.c_str());
-					if (magic[2] != 8)
-						log_cmd_error("gzip file `%s' uses unsupported compression type %02x\n",
-							filename.c_str(), unsigned(magic[2]));
-					delete ff;
-					std::stringstream *df = new std::stringstream();
-					decompress_gzip(filename, *df);
-					f = df;
-	#else
-					log_cmd_error("File `%s' is a gzip file, but Yosys is compiled without zlib.\n", filename.c_str());
-	#endif
-				} else {
-					ff->clear();
-					ff->seekg(0, std::ios::beg);
-				}
-			}
+			f = uncompressed(filename, bin_input ? std::ifstream::binary : std::ifstream::in);
 		}
-		if (f == NULL)
-			log_cmd_error("Can't open input file `%s' for reading: %s\n", filename.c_str(), strerror(errno));
 
 		for (size_t i = argidx+1; i < args.size(); i++)
 			if (args[i].compare(0, 1, "-") == 0)
@@ -745,7 +649,7 @@ void Backend::backend_call(RTLIL::Design *design, std::ostream *f, std::string f
 	}
 
 	while (design->selection_stack.size() > orig_sel_stack_pos)
-		design->selection_stack.pop_back();
+		design->pop_selection();
 }
 
 struct SimHelper {
@@ -956,7 +860,7 @@ struct HelpPass : public Pass {
 		// init json
 		json.begin_object();
 		json.entry("version", "Yosys internal cells");
-		json.entry("generator", yosys_version_str);
+		json.entry("generator", yosys_maybe_version());
 
 		dict<string, vector<string>> groups;
 		dict<string, pair<SimHelper, CellType>> cells;
