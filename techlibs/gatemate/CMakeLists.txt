@@ -1,6 +1,9 @@
-add_library(yosys_techlibs_gatemate INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_gatemate LANGUAGES CXX)
 
-target_sources(yosys_techlibs_gatemate INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_gatemate.cc
     gatemate_foldinv.cc
 )
@@ -13,12 +16,15 @@ add_custom_command(
     WORKING_DIRECTORY ${yosys_BINARY_DIR}
 )
 
-target_sources(yosys_techlibs_gatemate PRIVATE
+target_sources(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_BINARY_DIR}/lut_tree_cells.genlib
     ${CMAKE_CURRENT_BINARY_DIR}/lut_tree_map.v
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_gatemate)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/gatemate" "reg_map.v")
 add_share_file("share/gatemate" "mux_map.v")

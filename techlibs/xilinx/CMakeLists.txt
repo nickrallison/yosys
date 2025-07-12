@@ -1,11 +1,17 @@
-add_library(yosys_techlibs_xilinx INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_xilinx LANGUAGES CXX)
 
-target_sources(yosys_techlibs_xilinx INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_xilinx.cc
     xilinx_dffopt.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_xilinx)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/xilinx" "cells_map.v")
 add_share_file("share/xilinx" "cells_sim.v")

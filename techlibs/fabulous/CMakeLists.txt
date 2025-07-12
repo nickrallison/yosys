@@ -1,10 +1,16 @@
-add_library(yosys_techlibs_fabulous INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_fabulous LANGUAGES CXX)
 
-target_sources(yosys_techlibs_fabulous INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_fabulous.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_fabulous)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/fabulous" "cells_map.v")
 add_share_file("share/fabulous" "prims.v")

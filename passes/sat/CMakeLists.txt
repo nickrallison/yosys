@@ -1,6 +1,9 @@
-add_library(yosys_passes_sat INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_passes_sat LANGUAGES CXX)
 
-target_sources(yosys_passes_sat INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     sat.cc
     freduce.cc
     eval.cc
@@ -21,15 +24,25 @@ target_sources(yosys_passes_sat INTERFACE
 )
 
 if (ENABLE_ZLIB)
-target_sources(yosys_passes_sat INTERFACE
+target_sources(${PROJECT_NAME} PRIVATE
     sim.cc
 )
 endif()
 
 if (NOT DISABLE_SPAWN)
-target_sources(yosys_passes_sat INTERFACE
+target_sources(${PROJECT_NAME} PRIVATE
     qbfsat.cc
 )
 endif()
 
-target_link_libraries(yosys PUBLIC yosys_passes_sat)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${yosys_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)

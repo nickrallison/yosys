@@ -1,10 +1,16 @@
-add_library(yosys_techlibs_ecp5 INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_ecp5 LANGUAGES CXX)
 
-target_sources(yosys_techlibs_ecp5 INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_ecp5.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_ecp5)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/ecp5" "cells_ff.vh")
 add_share_file("share/ecp5" "cells_io.vh")

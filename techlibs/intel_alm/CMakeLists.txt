@@ -1,10 +1,16 @@
-add_library(yosys_techlibs_intel_alm INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_intel_alm LANGUAGES CXX)
 
-target_sources(yosys_techlibs_intel_alm INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_intel_alm.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_intel_alm)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 # Techmap
 add_share_file("share/intel_alm/common" "common/abc9_map.v")

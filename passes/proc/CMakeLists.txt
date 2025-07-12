@@ -1,6 +1,9 @@
-add_library(yosys_passes_proc INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_passes_proc LANGUAGES CXX)
 
-target_sources(yosys_passes_proc INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     proc.cc
     proc_prune.cc
     proc_clean.cc
@@ -14,4 +17,6 @@ target_sources(yosys_passes_proc INTERFACE
     proc_memwr.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_proc)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    yosys_kernel
+)

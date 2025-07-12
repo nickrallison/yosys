@@ -1,11 +1,17 @@
-add_library(yosys_techlibs_microchip INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_microchip LANGUAGES CXX)
 
-target_sources(yosys_techlibs_microchip INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_microchip.cc
     microchip_dffopt.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_microchip)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/microchip" "arith_map.v")
 add_share_file("share/microchip" "cells_map.v")
@@ -17,3 +23,5 @@ add_share_file("share/microchip" "LSRAM_map.v")
 add_share_file("share/microchip" "LSRAM.txt")
 add_share_file("share/microchip" "uSRAM_map.v")
 add_share_file("share/microchip" "uSRAM.txt")
+
+

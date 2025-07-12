@@ -1,12 +1,18 @@
-add_library(yosys_techlibs_coolrunner2 INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_coolrunner2 LANGUAGES CXX)
 
-target_sources(yosys_techlibs_coolrunner2 INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_coolrunner2.cc
     coolrunner2_sop.cc
     coolrunner2_fixup.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_coolrunner2)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/coolrunner2" "cells_latch.v")
 add_share_file("share/coolrunner2" "cells_sim.v")

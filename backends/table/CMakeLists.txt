@@ -1,7 +1,13 @@
-add_library(yosys_backends_table INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_backends_table LANGUAGES CXX)
 
-target_sources(yosys_backends_table INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     table.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_table)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)

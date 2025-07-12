@@ -1,10 +1,15 @@
-add_library(yosys_techlibs_achronix INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_achronix LANGUAGES CXX)
 
-target_sources(yosys_techlibs_achronix INTERFACE
+add_library(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE
     synth_achronix.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_achronix)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/achronix/speedster22i" "speedster22i/cells_sim.v")
 add_share_file("share/achronix/speedster22i" "speedster22i/cells_map.v")

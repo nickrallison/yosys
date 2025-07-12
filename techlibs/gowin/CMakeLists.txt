@@ -1,10 +1,16 @@
-add_library(yosys_techlibs_gowin INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_gowin LANGUAGES CXX)
 
-target_sources(yosys_techlibs_gowin INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_gowin.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_gowin)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/gowin" "cells_map.v")
 add_share_file("share/gowin" "cells_sim.v")

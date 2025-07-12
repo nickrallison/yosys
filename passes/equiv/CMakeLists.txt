@@ -1,6 +1,9 @@
-add_library(yosys_passes_equiv INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_passes_equiv LANGUAGES CXX)
 
-target_sources(yosys_passes_equiv INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     equiv_make.cc
     equiv_miter.cc
     equiv_simple.cc
@@ -14,4 +17,8 @@ target_sources(yosys_passes_equiv INTERFACE
     equiv_opt.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_equiv)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
+

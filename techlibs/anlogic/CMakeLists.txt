@@ -1,12 +1,19 @@
-add_library(yosys_techlibs_anlogic INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_anlogic LANGUAGES CXX)
 
-target_sources(yosys_techlibs_anlogic INTERFACE
+
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_anlogic.cc
     anlogic_eqn.cc
     anlogic_fixcarry.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_anlogic)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/anlogic" "cells_map.v")
 add_share_file("share/anlogic" "arith_map.v")

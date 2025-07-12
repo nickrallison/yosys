@@ -1,10 +1,16 @@
-add_library(yosys_backends_cxxrtl INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_backends_cxxrtl LANGUAGES CXX)
 
-target_sources(yosys_backends_cxxrtl INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     cxxrtl_backend.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_cxxrtl)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_include_file("backends/cxxrtl/runtime/cxxrtl" "runtime/cxxrtl/cxxrtl.h")
 add_include_file("backends/cxxrtl/runtime/cxxrtl" "runtime/cxxrtl/cxxrtl_vcd.h")

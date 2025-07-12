@@ -1,7 +1,13 @@
-add_library(yosys_techlibs_easic INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_easic LANGUAGES CXX)
 
-target_sources(yosys_techlibs_easic INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_easic.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_easic)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)

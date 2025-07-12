@@ -1,21 +1,17 @@
 cmake_minimum_required(VERSION 3.23)
-project(yosys_frontends_aiger LANGUAGES CXX)
+project(yosys_libs_subcircuit LANGUAGES CXX)
 
 add_library(${PROJECT_NAME})
 target_sources(
     ${PROJECT_NAME}
     PRIVATE
-        aigerparse.cc
+        subcircuit.cc
+
     PUBLIC
     FILE_SET HEADERS
     BASE_DIRS .
     FILES
-        aigerparse.h
-)
-
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        yosys_kernel
+        subcircuit.h
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -23,3 +19,5 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
+
+add_library(subcircuit ALIAS ${PROJECT_NAME})

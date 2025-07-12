@@ -1,4 +1,7 @@
-add_library(yosys_passes_pmgen INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_passes_pmgen LANGUAGES CXX)
+
+add_library(${PROJECT_NAME})
 
 function(pmgen_command  _name _path)
     set(CUSTOM_TARGET_NAME ${_name}_pm_gen)
@@ -10,7 +13,7 @@ function(pmgen_command  _name _path)
         COMMENT "Generating ${_path}/${_name}_pm.h..."
     )
     add_custom_target(${CUSTOM_TARGET_NAME} DEPENDS ${GENERATED_HEADER})
-    add_dependencies(yosys_passes_pmgen ${CUSTOM_TARGET_NAME})
+    add_dependencies(${PROJECT_NAME} ${CUSTOM_TARGET_NAME})
 endfunction()
 
 pmgen_command(test_pmgen passes/pmgen)
@@ -44,9 +47,9 @@ add_custom_command(
     COMMENT "Generating passes/pmgen/peepopt_pm.h..."
 )
 add_custom_target(peepopt_pm DEPENDS ${yosys_BINARY_DIR}/passes/opt/peepopt_pm.h)
-add_dependencies(yosys_passes_pmgen peepopt_pm)
+add_dependencies(${PROJECT_NAME} peepopt_pm)
 
-target_sources(yosys_passes_pmgen INTERFACE
+target_sources(${PROJECT_NAME} PRIVATE
     test_pmgen.cc
     ${yosys_SOURCE_DIR}/techlibs/ice40/ice40_dsp.cc
     ${yosys_SOURCE_DIR}/techlibs/ice40/ice40_wrapcarry.cc
@@ -55,6 +58,21 @@ target_sources(yosys_passes_pmgen INTERFACE
     ${yosys_SOURCE_DIR}/passes/opt/peepopt.cc
     ${yosys_SOURCE_DIR}/techlibs/xilinx/xilinx_srl.cc
 )
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${yosys_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        $<BUILD_INTERFACE:${yosys_BINARY_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
+
 
 # target_sources(yosys_passes_pmgen PUBLIC ${yosys_BINARY_DIR}/passes/pmgen/test_pmgen_pm.h)
 
@@ -73,5 +91,3 @@ target_sources(yosys_passes_pmgen INTERFACE
 # target_sources(yosys_passes_pmgen PUBLIC ${yosys_BINARY_DIR}/passes/opt/peepopt_pm.h)
 
 # target_sources(yosys_passes_pmgen PUBLIC ${yosys_BINARY_DIR}/techlibs/xilinx/xilinx_srl_pm.h)
-
-target_link_libraries(yosys PUBLIC yosys_passes_pmgen)

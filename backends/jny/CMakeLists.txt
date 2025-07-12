@@ -1,7 +1,13 @@
-add_library(yosys_backends_jny INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_backends_jny LANGUAGES CXX)
 
-target_sources(yosys_backends_jny INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     jny.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_jny)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)

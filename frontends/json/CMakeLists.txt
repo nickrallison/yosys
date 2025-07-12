@@ -1,7 +1,11 @@
-add_library(yosys_frontends_json INTERFACE)
+add_library(yosys_frontends_json)
 
-target_sources(yosys_frontends_json INTERFACE
+target_sources(yosys_frontends_json PRIVATE
     jsonparse.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_frontends_json)
+
+target_link_libraries(yosys_frontends_json
+    PRIVATE
+        yosys_kernel
+)

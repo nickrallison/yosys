@@ -1,7 +1,6 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.23)
 project(yosys LANGUAGES CXX C)
 set(YOSYS_VER "0.50+1")
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # features (the more the better)
 
@@ -51,15 +50,25 @@ include(CheckCXXCompilerFlag)
 
 if (ENABLE_ABC)
     set(ABC_USE_NAMESPACE "abc")
+    
+    # Pass readline information to ABC if available
+    if (ENABLE_READLINE AND READLINE_FOUND)
+        set(READLINE_FOUND TRUE CACHE BOOL "Readline found" FORCE)
+        set(READLINE_INCLUDE ${READLINE_INCLUDE_DIR} CACHE STRING "Readline include directory" FORCE)
+        set(READLINE_LIBRARIES ${READLINE_LIBRARY} CACHE STRING "Readline libraries" FORCE)
+    else()
+        set(READLINE_FOUND FALSE CACHE BOOL "Readline found" FORCE)
+    endif()
+    
     add_subdirectory(abc EXCLUDE_FROM_ALL)
 
     add_custom_command(
-        OUTPUT ${yosys_BINARY_DIR}/yosys-abc
+        OUTPUT ${CMAKE_BINARY_DIR}/yosys-abc
         DEPENDS abc  # Depend on the target, not the generator expression
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:abc> ${yosys_BINARY_DIR}/yosys-abc
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:abc> ${CMAKE_BINARY_DIR}/yosys-abc
     )
 
-    add_custom_target(yosys-abc-copy ALL DEPENDS ${yosys_BINARY_DIR}/yosys-abc)
+    add_custom_target(yosys-abc-copy ALL DEPENDS ${CMAKE_BINARY_DIR}/yosys-abc)
 endif()
 
 set(CMAKE_CXX_STANDARD ${CXXSTD})
@@ -75,49 +84,20 @@ find_package(BISON 3.0 REQUIRED)
 find_package(Python3 3.5 REQUIRED COMPONENTS Interpreter)
 
 add_library(yosys STATIC)
-#target_include_directories(yosys PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-#target_include_directories(yosys PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-#target_compile_definitions(yosys PUBLIC _YOSYS_)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(yosys PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+set_property(TARGET yosys PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_compile_definitions(_YOSYS_)
-target_compile_definitions(yosys PUBLIC _YOSYS_)
+# include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (ENABLE_READLINE AND ENABLE_EDITLINE)
     message(FATAL_ERROR "Not possible to enable both ENABLE_READLINE and ENABLE_EDITLINE")
 endif()
 
-if (ENABLE_READLINE)
-    find_package(Readline REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_READLINE)
-    target_link_libraries(yosys PUBLIC ${READLINE_LIBRARY})
-endif()
-
-if (ENABLE_EDITLINE)
-    find_package(Editline REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_EDITLINE)
-    target_link_libraries(yosys PUBLIC ${EDITLINE_LIBRARY})
-endif()
-
 if (ENABLE_TCL)
     find_package(TCL 8.6 REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_TCL)
-    target_include_directories(yosys PUBLIC ${TCL_INCLUDE_PATH})
-    target_link_libraries(yosys PUBLIC ${TCL_LIBRARY})
 endif()
 
 if (ENABLE_ZLIB)
     find_package(ZLIB REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_ZLIB)
-    target_link_libraries(yosys PUBLIC ZLIB::ZLIB)
-endif()
-
-if (ENABLE_COVER)
-    add_compile_definitions(YOSYS_ENABLE_COVER)
 endif()
 
 if (ENABLE_CCACHE)
@@ -143,9 +123,9 @@ if (ENABLE_SCCACHE)
 endif ()
 
 if (ENABLE_ABC)
-    add_compile_definitions(YOSYS_ENABLE_ABC)
+    target_compile_definitions(yosys PUBLIC YOSYS_ENABLE_ABC)
     if (LINK_ABC)
-        add_compile_definitions(YOSYS_LINK_ABC)
+        target_compile_definitions(yosys PUBLIC YOSYS_LINK_ABC)
         target_link_libraries(yosys PUBLIC $<TARGET_FILE:libabc>)
         add_dependencies(yosys libabc)
     endif()        
@@ -153,13 +133,13 @@ endif()
 
 if (ENABLE_PLUGINS)
     find_package(LibFFI REQUIRED)
-    add_compile_definitions(YOSYS_ENABLE_PLUGINS)
+    target_compile_definitions(yosys PUBLIC YOSYS_ENABLE_PLUGINS)
     include_directories(${LIBFFI_INCLUDE_DIR})
     target_link_libraries(yosys PUBLIC ${LIBFFI_LIBRARY})
 endif()
 
 if (DISABLE_SPAWN)
-    add_compile_definitions(YOSYS_DISABLE_SPAWN)
+    target_compile_definitions(yosys PUBLIC YOSYS_DISABLE_SPAWN)
 endif()
 
 function(add_share_file _dir _name)
@@ -174,73 +154,150 @@ function(add_include_file _dir _name)
     add_share_file("share/include/${_dir}" "${_name}")
 endfunction()
 
+add_library(yosys_shared SHARED kernel/yosys_shared_dummy.cc)
+target_link_libraries(yosys_shared PUBLIC yosys)
+set_target_properties(yosys_shared PROPERTIES OUTPUT_NAME yosys)
 
-add_subdirectory(kernel)
 add_subdirectory(libs)
 
-add_subdirectory(frontends/aiger)
-add_subdirectory(frontends/aiger2)
-add_subdirectory(frontends/ast)
-add_subdirectory(frontends/blif)
-add_subdirectory(frontends/json)
-add_subdirectory(frontends/liberty)
-add_subdirectory(frontends/rpc)
-add_subdirectory(frontends/rtlil)
-add_subdirectory(frontends/verific)
-add_subdirectory(frontends/verilog)
+add_subdirectory(kernel)
+target_link_libraries(yosys PUBLIC yosys_kernel)
 
+add_subdirectory(frontends/aiger)
+target_link_libraries(yosys PUBLIC yosys_frontends_aiger)
+add_subdirectory(frontends/aiger2)
+target_link_libraries(yosys PUBLIC yosys_frontends_aiger2)
+add_subdirectory(frontends/ast)
+target_link_libraries(yosys PUBLIC yosys_frontends_ast)
+add_subdirectory(frontends/blif)
+target_link_libraries(yosys PUBLIC yosys_frontends_blif)
+add_subdirectory(frontends/json)
+target_link_libraries(yosys PUBLIC yosys_frontends_json)
+add_subdirectory(frontends/liberty)
+target_link_libraries(yosys PUBLIC yosys_frontends_liberty)
+add_subdirectory(frontends/rpc)
+if (NOT DISABLE_SPAWN)
+    target_link_libraries(yosys PUBLIC yosys_frontends_rpc)
+endif()
+add_subdirectory(frontends/rtlil)
+target_link_libraries(yosys PUBLIC yosys_frontends_rtlil)
+target_link_libraries(yosys PUBLIC yosys_frontends_rtlil_gen)
+add_subdirectory(frontends/verilog)
+add_subdirectory(frontends/verific)
+target_link_libraries(yosys PUBLIC yosys_frontends_verific)
 add_subdirectory(backends/aiger)
+target_link_libraries(yosys PUBLIC yosys_backends_aiger)
 add_subdirectory(backends/aiger2)
+target_link_libraries(yosys PUBLIC yosys_backends_aiger2)
 add_subdirectory(backends/blif)
+target_link_libraries(yosys PUBLIC yosys_backends_blif)
 add_subdirectory(backends/btor)
+target_link_libraries(yosys PUBLIC yosys_backends_btor)
 add_subdirectory(backends/cxxrtl)
+target_link_libraries(yosys PUBLIC yosys_backends_cxxrtl)
 add_subdirectory(backends/edif)
+target_link_libraries(yosys PUBLIC yosys_backends_edif)
 add_subdirectory(backends/firrtl)
+target_link_libraries(yosys PUBLIC yosys_backends_firrtl)
 add_subdirectory(backends/functional)
+target_link_libraries(yosys PUBLIC yosys_backends_functional)
 add_subdirectory(backends/intersynth)
+target_link_libraries(yosys PUBLIC yosys_backends_intersynth)
 add_subdirectory(backends/jny)
+target_link_libraries(yosys PUBLIC yosys_backends_jny)
 add_subdirectory(backends/json)
+target_link_libraries(yosys PUBLIC yosys_backends_json)
 add_subdirectory(backends/rtlil)
+target_link_libraries(yosys PUBLIC yosys_backends_rtlil)
 add_subdirectory(backends/simplec)
+target_link_libraries(yosys PUBLIC yosys_backends_simplec)
 add_subdirectory(backends/smt2)
+target_link_libraries(yosys PUBLIC yosys_backends_smt2)
 add_subdirectory(backends/smv)
+target_link_libraries(yosys PUBLIC yosys_backends_smv)
 add_subdirectory(backends/spice)
+target_link_libraries(yosys PUBLIC yosys_backends_spice)
 add_subdirectory(backends/table)
+target_link_libraries(yosys PUBLIC yosys_backends_table)
 add_subdirectory(backends/verilog)
+target_link_libraries(yosys PUBLIC yosys_backends_verilog)
 
 add_subdirectory(passes/cmds)
+target_link_libraries(yosys PUBLIC yosys_passes_cmds)
 add_subdirectory(passes/equiv)
+target_link_libraries(yosys PUBLIC yosys_passes_equiv)
 add_subdirectory(passes/fsm)
+target_link_libraries(yosys PUBLIC yosys_passes_fsm)
 add_subdirectory(passes/hierarchy)
+target_link_libraries(yosys PUBLIC yosys_passes_hierarchy)
 add_subdirectory(passes/memory)
+target_link_libraries(yosys PUBLIC yosys_passes_memory)
 add_subdirectory(passes/opt)
+target_link_libraries(yosys PUBLIC yosys_passes_opt)
 add_subdirectory(passes/pmgen)
+target_link_libraries(yosys PUBLIC yosys_passes_pmgen)
 add_subdirectory(passes/proc)
+target_link_libraries(yosys PUBLIC yosys_passes_proc)
 add_subdirectory(passes/sat)
+target_link_libraries(yosys PUBLIC yosys_passes_sat)
 add_subdirectory(passes/techmap)
+target_link_libraries(yosys PUBLIC yosys_passes_techmap)
 add_subdirectory(passes/tests)
+target_link_libraries(yosys PUBLIC yosys_passes_tests)
 
 add_subdirectory(techlibs/achronix)
+target_link_libraries(yosys PUBLIC yosys_techlibs_achronix)
 add_subdirectory(techlibs/anlogic)
+target_link_libraries(yosys PUBLIC yosys_techlibs_anlogic)
 add_subdirectory(techlibs/common)
+target_link_libraries(yosys PUBLIC yosys_techlibs_common)
 add_subdirectory(techlibs/coolrunner2)
+target_link_libraries(yosys PUBLIC yosys_techlibs_coolrunner2)
 add_subdirectory(techlibs/easic)
+target_link_libraries(yosys PUBLIC yosys_techlibs_easic)
 add_subdirectory(techlibs/ecp5)
+target_link_libraries(yosys PUBLIC yosys_techlibs_ecp5)
 add_subdirectory(techlibs/efinix)
+target_link_libraries(yosys PUBLIC yosys_techlibs_efinix)
 add_subdirectory(techlibs/fabulous)
+target_link_libraries(yosys PUBLIC yosys_techlibs_fabulous)
 add_subdirectory(techlibs/gatemate)
+target_link_libraries(yosys PUBLIC yosys_techlibs_gatemate)
 add_subdirectory(techlibs/gowin)
+target_link_libraries(yosys PUBLIC yosys_techlibs_gowin)
 add_subdirectory(techlibs/greenpak4)
+target_link_libraries(yosys PUBLIC yosys_techlibs_greenpak4)
 add_subdirectory(techlibs/ice40)
+target_link_libraries(yosys PUBLIC yosys_techlibs_ice40)
 add_subdirectory(techlibs/intel)
+target_link_libraries(yosys PUBLIC yosys_techlibs_intel)
 add_subdirectory(techlibs/intel_alm)
+target_link_libraries(yosys PUBLIC yosys_techlibs_intel_alm)
 add_subdirectory(techlibs/lattice)
+target_link_libraries(yosys PUBLIC yosys_techlibs_lattice)
 add_subdirectory(techlibs/microchip)
+target_link_libraries(yosys PUBLIC yosys_techlibs_microchip)
 add_subdirectory(techlibs/nanoxplore)
+target_link_libraries(yosys PUBLIC yosys_techlibs_nanoxplore)
 add_subdirectory(techlibs/nexus)
+target_link_libraries(yosys PUBLIC yosys_techlibs_nexus)
 add_subdirectory(techlibs/quicklogic)
+target_link_libraries(yosys PUBLIC yosys_techlibs_quicklogic)
 add_subdirectory(techlibs/sf2)
+target_link_libraries(yosys PUBLIC yosys_techlibs_sf2)
 add_subdirectory(techlibs/xilinx)
+target_link_libraries(yosys PUBLIC yosys_techlibs_xilinx)
+
+add_executable(yosys_exe
+    kernel/driver.cc
+)   
+
+target_link_libraries(yosys_exe 
+    PUBLIC 
+        yosys
+        sha1
+)
+set_target_properties(yosys_exe PROPERTIES OUTPUT_NAME yosys)
 
 add_include_file("kernel" "kernel/binding.h")
 add_include_file("kernel" "kernel/bitpattern.h")
@@ -287,173 +344,3 @@ if (ENABLE_ZLIB)
     add_include_file("kernel" "kernel/fstdata.h")
     add_include_file("libs/fst" "libs/fst/fstapi.h")
 endif()
-
-set_property(SOURCE kernel/log.cc APPEND PROPERTY COMPILE_DEFINITIONS YOSYS_SRC="${PROJECT_SOURCE_DIR}")
-
-if (ENABLE_LIBYOSYS)
-    add_library(yosys_shared SHARED)
-    target_link_libraries(yosys_shared PUBLIC yosys)
-    set_target_properties(yosys_shared PROPERTIES OUTPUT_NAME yosys)
-    install(TARGETS yosys_shared
-            LIBRARY DESTINATION .)
-endif()
-
-add_executable(yosys_exe
-    kernel/driver.cc)
-target_link_libraries(yosys_exe PUBLIC yosys)
-set_target_properties(yosys_exe PROPERTIES OUTPUT_NAME yosys)
-
-#### yosys-config setup ####
-# compiler
-get_filename_component(_CXX_BASENAME "${CMAKE_CXX_COMPILER}" NAME)
-set(YOSYS_CFG_CXX "${_CXX_BASENAME}"
-        CACHE STRING "C++ compiler that appears in yosys-config")
-
-# compile flags
-set(_CFG_CXXFLAGS
-        -Wall -Wextra -ggdb
-        "-I\"${CMAKE_INSTALL_PREFIX}/share/yosys/include\""
-        -MD -MP -D_YOSYS_ -fPIC
-        -I${CMAKE_INSTALL_PREFIX}/include
-        -std=c++${CXXSTD} -O3)
-
-if (ENABLE_READLINE)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_READLINE)
-endif()
-if (ENABLE_PLUGINS)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_PLUGINS)
-endif()
-if (ENABLE_GLOB)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_GLOB)
-endif()
-if (ENABLE_ZLIB)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_ZLIB)
-endif()
-if (ENABLE_TCL)
-    list(APPEND _CFG_CXXFLAGS -I${TCL_INCLUDE_PATH} -DYOSYS_ENABLE_TCL)
-endif()
-if (ENABLE_ABC)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_ABC)
-endif()
-if (ENABLE_COVER)
-    list(APPEND _CFG_CXXFLAGS -DYOSYS_ENABLE_COVER)
-endif()
-
-string (REPLACE ";" " " YOSYS_CFG_CXXFLAGS "${_CFG_CXXFLAGS}")
-
-# link flags
-set(YOSYS_CFG_LINKFLAGS "-rdynamic" CACHE STRING "link flags for yosys-config")
-
-# libraries
-set(_CFG_LIBS -lstdc++ -lm)
-if (NOT (${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD"))
-    list(APPEND _CFG_LIBS -lrt)
-endif()
-if (ENABLE_READLINE)
-    list(APPEND _CFG_LIBS -lreadline)
-endif()
-if (ENABLE_PLUGINS)
-    list(APPEND _CFG_LIBS -lffi)
-    if (NOT APPLE)
-        list(APPEND _CFG_LIBS -ldl)
-    endif()
-endif()
-if (ENABLE_ZLIB)
-    list(APPEND _CFG_LIBS -lz)
-endif()
-if (ENABLE_TCL)
-    get_filename_component(_TCL "${TCL_LIBRARY}" NAME_WE)
-    string(REGEX REPLACE "^lib" "" _TCL "${_TCL}")
-    list(APPEND _CFG_LIBS "-l${_TCL}")
-endif()
-string (REPLACE ";" " " YOSYS_CFG_LIBS "${_CFG_LIBS}")
-
-# bindir / datadir (installation paths)
-set(YOSYS_CFG_PREFIX "/usr/local"
-    CACHE STRING "prefix that yosys-config reports")
-
-set(YOSYS_CFG_BINDIR "${YOSYS_CFG_PREFIX}/bin")
-set(YOSYS_CFG_DATDIR "${YOSYS_CFG_PREFIX}/share/yosys")
-
-# abort if something is missing
-foreach(var YOSYS_CFG_CXX YOSYS_CFG_CXXFLAGS YOSYS_CFG_LINKFLAGS
-        YOSYS_CFG_LIBS YOSYS_CFG_BINDIR YOSYS_CFG_DATDIR)
-    if("${${var}}" STREQUAL "")
-        message(FATAL_ERROR "${var} is empty – cannot create yosys-config")
-    endif()
-endforeach()
-
-set(CXX        "${YOSYS_CFG_CXX}")
-set(CXXFLAGS   "${YOSYS_CFG_CXXFLAGS}")
-set(LINKFLAGS  "${YOSYS_CFG_LINKFLAGS}")
-set(LIBS       "${YOSYS_CFG_LIBS}")
-set(BINDIR     "${YOSYS_CFG_BINDIR}")
-set(DATDIR     "${YOSYS_CFG_DATDIR}")
-
-configure_file(misc/yosys-config.in ${yosys_BINARY_DIR}/yosys-config @ONLY)
-file(CHMOD ${yosys_BINARY_DIR}/yosys-config
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE)
-
-add_custom_target(yosys-config-copy ALL
-        DEPENDS ${yosys_BINARY_DIR}/yosys-config)
-
-#### INSTALL ####
-install(TARGETS yosys
-        RUNTIME DESTINATION .)
-
-if (ENABLE_ABC)
-    install(PROGRAMS $<TARGET_FILE:abc>
-            DESTINATION .
-            RENAME yosys-abc)
-endif()
-
-install(PROGRAMS ${yosys_BINARY_DIR}/yosys-config DESTINATION .)
-
-#### TESTING ####
-include(cmake/TestFiles.cmake)
-enable_testing()
-
-set(_YOSYS_TEST_ENV
-    "PATH=${PROJECT_SOURCE_DIR}:$ENV{PATH};")
-
-foreach(dir IN LISTS SH_TEST_DIRS)
-    string(REPLACE "/" "_" name "${dir}")
-    add_test(
-        NAME    seed-tests.${name}
-        COMMAND bash -c
-                "cd \"${PROJECT_SOURCE_DIR}/${dir}\" && bash run-test.sh ${SEEDOPT}"
-    )
-    set_tests_properties(seed-tests.${name} PROPERTIES
-                         ENVIRONMENT "${_YOSYS_TEST_ENV}"
-                         DEPENDS yosys)
-endforeach()
-
-foreach(dir IN LISTS SH_ABC_TEST_DIRS)
-    string(REPLACE "/" "_" name "${dir}")
-    add_test(
-        NAME    abcopt-tests.${name}
-        COMMAND bash -c
-                "cd \"${PROJECT_SOURCE_DIR}/${dir}\" && bash run-test.sh ${ABCOPT} ${SEEDOPT}"
-    )
-    set_tests_properties(abcopt-tests.${name} PROPERTIES
-                         ENVIRONMENT "${_YOSYS_TEST_ENV}"
-                         DEPENDS yosys)
-endforeach()
-
-foreach(dir IN LISTS MK_TEST_DIRS)
-    string(REPLACE "/" "_" name "${dir}")
-    add_test(
-        NAME    makefile-tests.${name}
-        COMMAND bash -c
-                "
-                cd \"${PROJECT_SOURCE_DIR}/${dir}\" &&
-                bash run-test.sh &&
-                ${CMAKE_MAKE_PROGRAM} -f run-test.mk
-                "
-    )
-    set_tests_properties(makefile-tests.${name} PROPERTIES
-                         ENVIRONMENT "${_YOSYS_TEST_ENV}"
-                         DEPENDS yosys)
-endforeach()

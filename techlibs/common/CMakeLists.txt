@@ -1,4 +1,4 @@
-add_library(yosys_techlib_common INTERFACE)
+add_library(yosys_techlibs_common STATIC)
 
 add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/techlibs/common
@@ -15,19 +15,35 @@ add_custom_command(
 	COMMENT "Generating techlibs/common/simcells_help.inc..."
 )
 
-add_custom_target(yosys_techlib_common_gen DEPENDS
+add_custom_target(yosys_techlibs_common_gen DEPENDS
 	${CMAKE_CURRENT_BINARY_DIR}/simlib_help.inc
 	${CMAKE_CURRENT_BINARY_DIR}/simcells_help.inc
 )
 
-target_sources(yosys_techlib_common INTERFACE
+target_sources(yosys_techlibs_common PRIVATE
     synth.cc
     prep.cc
 )
+target_include_directories(yosys_techlibs_common PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+)
 
-add_dependencies(yosys_techlib_common yosys_techlib_common_gen)
+target_link_libraries(yosys_techlibs_common
+	PUBLIC
+		yosys_kernel
+)
 
-target_link_libraries(yosys PUBLIC yosys_techlib_common)
+if (ENABLE_ABC)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC YOSYS_ENABLE_ABC)
+    if (LINK_ABC)
+        target_compile_definitions(${PROJECT_NAME} PUBLIC YOSYS_LINK_ABC)
+        target_link_libraries(${PROJECT_NAME} PUBLIC $<TARGET_FILE:libabc>)
+        add_dependencies(${PROJECT_NAME} libabc)
+    endif()        
+endif()
+
+add_dependencies(yosys_techlibs_common yosys_techlibs_common_gen)
 
 add_share_file("share" "simlib.v")
 add_share_file("share" "simcells.v")

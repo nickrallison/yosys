@@ -1,11 +1,17 @@
-add_library(yosys_techlibs_lattice INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_lattice LANGUAGES CXX)
 
-target_sources(yosys_techlibs_lattice INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_lattice.cc
     lattice_gsr.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_lattice)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/lattice" "cells_ff.vh")
 add_share_file("share/lattice" "cells_io.vh")

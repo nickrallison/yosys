@@ -1,7 +1,13 @@
-add_library(yosys_backends_blif INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_backends_blif LANGUAGES CXX)
 
-target_sources(yosys_backends_blif INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     blif.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_backends_blif)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)

@@ -1,11 +1,16 @@
-add_library(yosys_techlibs_nanoxplore INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_nanoxplore LANGUAGES CXX)
 
-target_sources(yosys_techlibs_nanoxplore INTERFACE
+add_library(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE
     synth_nanoxplore.cc
     nx_carry.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_nanoxplore)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 # Techmap
 add_share_file("share/nanoxplore" "arith_map.v")

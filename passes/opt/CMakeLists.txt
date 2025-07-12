@@ -1,6 +1,8 @@
-add_library(yosys_passes_opt INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_passes_opt LANGUAGES CXX)
 
-target_sources(yosys_passes_opt INTERFACE
+add_library(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE
     opt.cc
     opt_merge.cc
     opt_mem.cc
@@ -24,4 +26,7 @@ target_sources(yosys_passes_opt INTERFACE
     muxpack.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_passes_opt)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)

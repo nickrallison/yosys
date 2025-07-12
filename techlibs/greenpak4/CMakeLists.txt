@@ -1,11 +1,17 @@
-add_library(yosys_techlibs_greenpak4 INTERFACE)
+cmake_minimum_required(VERSION 3.23)
+project(yosys_techlibs_greenpak4 LANGUAGES CXX)
 
-target_sources(yosys_techlibs_greenpak4 INTERFACE
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME} PRIVATE
     synth_greenpak4.cc
     greenpak4_dffinv.cc
 )
 
-target_link_libraries(yosys PUBLIC yosys_techlibs_greenpak4)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        yosys_kernel
+)
 
 add_share_file("share/greenpak4" "cells_blackbox.v")
 add_share_file("share/greenpak4" "cells_latch.v")
