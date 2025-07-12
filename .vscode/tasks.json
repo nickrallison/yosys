@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "build-cmake",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "build",
+        "--parallel"
+      ],
+      "group": "build",
+      "detail": "Build Yosys using CMake"
+    }
+  ]
+}
