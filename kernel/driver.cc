@@ -20,6 +20,7 @@
 #include "kernel/yosys.h"
 #include "kernel/hashlib.h"
 #include "libs/sha1/sha1.h"
+#define CXXOPTS_VECTOR_DELIMITER '\0'
 #include "libs/cxxopts/include/cxxopts.hpp"
 #include <iostream>
 
@@ -111,7 +112,7 @@ void run(const char *command)
 		log_last_error = "";
 	} catch (...) {
 		while (GetSize(yosys_get_design()->selection_stack) > selSize)
-			yosys_get_design()->selection_stack.pop_back();
+			yosys_get_design()->pop_selection();
 		throw;
 	}
 }
@@ -252,6 +253,7 @@ int main(int argc, char **argv)
 	options.add_options("logging")
 		("Q", "suppress printing of banner (copyright, disclaimer, version)")
 		("T", "suppress printing of footer (log hash, version, timing statistics)")
+		("no-version", "suppress writing out Yosys version anywhere excluding -V, --version")
 		("q,quiet", "quiet operation. Only write warnings and error messages to console. " \
 					"Use this option twice to also quiet warning messages")
 		("v,verbose", "print log headers up to <level> to the console. " \
@@ -314,10 +316,11 @@ int main(int argc, char **argv)
 		auto result = options.parse(argc, argv);
 
 		if (result.count("M")) memhasher_on();
-		if (result.count("X")) yosys_xtrace++;
+		if (result.count("X")) yosys_xtrace += result.count("X");
 		if (result.count("A")) call_abort = true;
 		if (result.count("Q")) print_banner = false;
 		if (result.count("T")) print_stats = false;
+		if (result.count("no-version")) yosys_write_versions = false;
 		if (result.count("V")) {
 			std::cout << yosys_version_str << std::endl;
 			exit(0);
@@ -691,7 +694,7 @@ int main(int argc, char **argv)
 				stats_divider.c_str(), ru_buffer.ru_utime.tv_sec + 1e-6 * ru_buffer.ru_utime.tv_usec,
 				ru_buffer.ru_stime.tv_sec + 1e-6 * ru_buffer.ru_stime.tv_usec, meminfo.c_str());
 #endif
-		log("%s\n", yosys_version_str);
+		log("%s\n", yosys_maybe_version());
 
 		int64_t total_ns = 0;
 		std::set<tuple<int64_t, int, std::string>> timedat;
@@ -731,7 +734,7 @@ int main(int argc, char **argv)
 				log_error("Can't open performance log file for writing: %s\n", strerror(errno));
 
 			fprintf(f, "{\n");
-			fprintf(f, "  \"generator\": \"%s\",\n", yosys_version_str);
+			fprintf(f, "  \"generator\": \"%s\",\n", yosys_maybe_version());
 			fprintf(f, "  \"total_ns\": %" PRIu64 ",\n", total_ns);
 			fprintf(f, "  \"passes\": {");
 

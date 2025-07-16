@@ -1,5 +1,6 @@
 #include "kernel/yosys.h"
 #include "kernel/ff.h"
+#include "kernel/gzip.h"
 #include "libparse.h"
 #include <optional>
 
@@ -308,13 +309,10 @@ struct ClockgatePass : public Pass {
 		if (!liberty_files.empty()) {
 			LibertyMergedCells merged;
 			for (auto path : liberty_files) {
-				std::ifstream f;
-				f.open(path.c_str());
-				if (f.fail())
-					log_cmd_error("Can't open liberty file `%s': %s\n", path.c_str(), strerror(errno));
-				LibertyParser p(f);
+				std::istream* f = uncompressed(path);
+				LibertyParser p(*f, path);
 				merged.merge(p);
-				f.close();
+				delete f;
 			}
 			std::tie(pos_icg_desc, neg_icg_desc) =
 				find_icgs(merged.cells, dont_use_cells);
@@ -333,7 +331,7 @@ struct ClockgatePass : public Pass {
 		dict<ClkNetInfo, GClkNetInfo> clk_nets;
 
 		int gated_flop_count = 0;
-		for (auto module : design->selected_whole_modules()) {
+		for (auto module : design->selected_unboxed_whole_modules()) {
 			for (auto cell : module->cells()) {
 				if (!RTLIL::builtin_ff_cell_types().count(cell->type))
 					continue;

@@ -19,6 +19,7 @@
 
 #include "kernel/yosys.h"
 #include "kernel/sigtools.h"
+#include "kernel/gzip.h"
 #include "libparse.h"
 #include <string.h>
 #include <errno.h>
@@ -101,6 +102,9 @@ static bool parse_next_state(const LibertyAst *cell, const LibertyAst *attr, std
 	} else if (expr[0] == '!') {
 		data_name = expr.substr(1, expr.size()-1);
 		data_not_inverted = false;
+	} else if (expr[0] == '(' && expr[expr.size() - 1] == ')') {
+		data_name = expr.substr(1, expr.size() - 2);
+		data_not_inverted = true;
 	} else {
 		data_name = expr;
 		data_not_inverted = true;
@@ -388,9 +392,21 @@ static void find_cell_sr(std::vector<const LibertyAst *> cells, IdString cell_ty
 			continue;
 		if (!parse_next_state(cell, ff->find("next_state"), cell_next_pin, cell_next_pol, cell_enable_pin, cell_enable_pol))
 			continue;
-		if (!parse_pin(cell, ff->find("preset"), cell_set_pin, cell_set_pol) || cell_set_pol != setpol)
+
+		if (!parse_pin(cell, ff->find("preset"), cell_set_pin, cell_set_pol))
 			continue;
-		if (!parse_pin(cell, ff->find("clear"), cell_clr_pin, cell_clr_pol) || cell_clr_pol != clrpol)
+		if (!parse_pin(cell, ff->find("clear"), cell_clr_pin, cell_clr_pol))
+			continue;
+		if (!cell_next_pol) {
+			// next_state is negated
+			// we later propagate this inversion to the output,
+			// which requires the swap of set and reset
+			std::swap(cell_set_pin, cell_clr_pin);
+			std::swap(cell_set_pol, cell_clr_pol);
+		}
+		if (cell_set_pol != setpol)
+			continue;
+		if (cell_clr_pol != clrpol)
 			continue;
 
 		std::map<std::string, char> this_cell_ports;
@@ -428,12 +444,14 @@ static void find_cell_sr(std::vector<const LibertyAst *> cells, IdString cell_ty
 				for (size_t pos = value.find_first_of("\" \t"); pos != std::string::npos; pos = value.find_first_of("\" \t"))
 					value.erase(pos, 1);
 				if (value == ff->args[0]) {
+					// next_state negation propagated to output
 					this_cell_ports[pin->args[0]] = cell_next_pol ? 'Q' : 'q';
 					if (cell_next_pol)
 						found_noninv_output = true;
 					found_output = true;
 				} else
 				if (value == ff->args[1]) {
+					// next_state negation propagated to output
 					this_cell_ports[pin->args[0]] = cell_next_pol ? 'q' : 'Q';
 					if (!cell_next_pol)
 						found_noninv_output = true;
@@ -630,13 +648,10 @@ struct DfflibmapPass : public Pass {
 
 		LibertyMergedCells merged;
 		for (auto path : liberty_files) {
-			std::ifstream f;
-			f.open(path.c_str());
-			if (f.fail())
-				log_cmd_error("Can't open liberty file `%s': %s\n", path.c_str(), strerror(errno));
-			LibertyParser p(f);
+			std::istream* f = uncompressed(path);
+			LibertyParser p(*f, path);
 			merged.merge(p);
-			f.close();
+			delete f;
 		}
 
 		find_cell(merged.cells, ID($_DFF_N_), false, false, false, false, false, false, dont_use_cells);

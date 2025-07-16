@@ -218,7 +218,7 @@ struct BoothPassWorker {
 
 				log_assert(cell->getParam(ID::A_SIGNED).as_bool() == cell->getParam(ID::B_SIGNED).as_bool());
 				is_signed = cell->getParam(ID::A_SIGNED).as_bool();
-			} else if (cell->type == ID($macc)) {
+			} else if (cell->type.in(ID($macc), ID($macc_v2))) {
 				Macc macc;
 				macc.from_cell(cell);
 
@@ -227,9 +227,9 @@ struct BoothPassWorker {
 					continue;
 				}
 
-				A = macc.ports[0].in_a;
-				B = macc.ports[0].in_b;
-				is_signed = macc.ports[0].is_signed;
+				A = macc.terms[0].in_a;
+				B = macc.terms[0].in_b;
+				is_signed = macc.terms[0].is_signed;
 				Y = cell->getPort(ID::Y);
 			} else {
 				continue;

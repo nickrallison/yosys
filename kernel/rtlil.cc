@@ -380,6 +380,49 @@ int RTLIL::Const::as_int(bool is_signed) const
 	return ret;
 }
 
+bool RTLIL::Const::convertible_to_int(bool is_signed) const
+{
+	auto size = get_min_size(is_signed);
+
+	if (size < 0)
+		return false;
+
+	// If it fits in 31 bits it is definitely convertible
+	if (size <= 31)
+		return true;
+
+	// If it fits in 32 bits, it is convertible if signed or if unsigned and the
+	// leading bit is not 1
+	if (size == 32) {
+		if (is_signed)
+			return true;
+		return get_bits().at(31) != State::S1;
+	}
+
+	return false;
+}
+
+std::optional<int> RTLIL::Const::try_as_int(bool is_signed) const
+{
+	if (!convertible_to_int(is_signed))
+		return std::nullopt;
+	return as_int(is_signed);
+}
+
+int RTLIL::Const::as_int_saturating(bool is_signed) const
+{
+	if (!convertible_to_int(is_signed)) {
+		if (!is_signed)
+			return std::numeric_limits<int>::max();
+
+		const auto min_size = get_min_size(is_signed);
+		log_assert(min_size > 0);
+		const auto neg = get_bits().at(min_size - 1);
+		return neg ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
+	}
+	return as_int(is_signed);
+}
+
 int RTLIL::Const::get_min_size(bool is_signed) const
 {
 	if (empty()) return 0;
@@ -412,18 +455,7 @@ void RTLIL::Const::compress(bool is_signed)
 
 std::optional<int> RTLIL::Const::as_int_compress(bool is_signed) const
 {
-	auto size = get_min_size(is_signed);
-	if(size == 0 || size > 32)
-		return std::nullopt;
-
-	int32_t ret = 0;
-	for (auto i = 0; i < size && i < 32; i++)
-		if ((*this)[i] == State::S1)
-			ret |= 1 << i;
-	if (is_signed && (*this)[size-1] == State::S1)
-		for (auto i = size; i < 32; i++)
-			ret |= 1 << i;
-	return ret;
+	return try_as_int(is_signed);
 }
 
 std::string RTLIL::Const::as_string(const char* any) const
@@ -538,6 +570,12 @@ void RTLIL::Const::bitvectorize() const {
 		(void)new ((void*)&bits_) bitvectype(std::move(new_bits));
 		tag = backing_tag::bits;
 	}
+}
+
+void RTLIL::Const::append(const RTLIL::Const &other) {
+	bitvectorize();
+	bitvectype& bv = get_bits();
+	bv.insert(bv.end(), other.begin(), other.end());
 }
 
 RTLIL::State RTLIL::Const::const_iterator::operator*() const {
@@ -760,8 +798,23 @@ vector<int> RTLIL::AttrObject::get_intvec_attribute(const RTLIL::IdString &id) c
 	return data;
 }
 
+bool RTLIL::Selection::boxed_module(const RTLIL::IdString &mod_name) const
+{
+	if (current_design != nullptr) {
+		auto module = current_design->module(mod_name);
+		return module && module->get_blackbox_attribute();
+	} else {
+		log_warning("Unable to check if module is boxed for null design.\n");
+		return false;
+	}
+}
+
 bool RTLIL::Selection::selected_module(const RTLIL::IdString &mod_name) const
 {
+	if (complete_selection)
+		return true;
+	if (!selects_boxes && boxed_module(mod_name))
+		return false;
 	if (full_selection)
 		return true;
 	if (selected_modules.count(mod_name) > 0)
@@ -773,6 +826,10 @@ bool RTLIL::Selection::selected_module(const RTLIL::IdString &mod_name) const
 
 bool RTLIL::Selection::selected_whole_module(const RTLIL::IdString &mod_name) const
 {
+	if (complete_selection)
+		return true;
+	if (!selects_boxes && boxed_module(mod_name))
+		return false;
 	if (full_selection)
 		return true;
 	if (selected_modules.count(mod_name) > 0)
@@ -782,6 +839,10 @@ bool RTLIL::Selection::selected_whole_module(const RTLIL::IdString &mod_name) co
 
 bool RTLIL::Selection::selected_member(const RTLIL::IdString &mod_name, const RTLIL::IdString &memb_name) const
 {
+	if (complete_selection)
+		return true;
+	if (!selects_boxes && boxed_module(mod_name))
+		return false;
 	if (full_selection)
 		return true;
 	if (selected_modules.count(mod_name) > 0)
@@ -794,7 +855,17 @@ bool RTLIL::Selection::selected_member(const RTLIL::IdString &mod_name, const RT
 
 void RTLIL::Selection::optimize(RTLIL::Design *design)
 {
-	if (full_selection) {
+	if (design != current_design) {
+		current_design = design;
+	}
+
+	if (selects_boxes && full_selection)
+		complete_selection = true;
+	if (complete_selection) {
+		full_selection = false;
+		selects_boxes = true;
+	}
+	if (selects_all()) {
 		selected_modules.clear();
 		selected_members.clear();
 		return;
@@ -804,7 +875,7 @@ void RTLIL::Selection::optimize(RTLIL::Design *design)
 
 	del_list.clear();
 	for (auto mod_name : selected_modules) {
-		if (design->modules_.count(mod_name) == 0)
+		if (current_design->modules_.count(mod_name) == 0 || (!selects_boxes && boxed_module(mod_name)))
 			del_list.push_back(mod_name);
 		selected_members.erase(mod_name);
 	}
@@ -813,7 +884,7 @@ void RTLIL::Selection::optimize(RTLIL::Design *design)
 
 	del_list.clear();
 	for (auto &it : selected_members)
-		if (design->modules_.count(it.first) == 0)
+		if (current_design->modules_.count(it.first) == 0 || (!selects_boxes && boxed_module(it.first)))
 			del_list.push_back(it.first);
 	for (auto mod_name : del_list)
 		selected_members.erase(mod_name);
@@ -821,7 +892,7 @@ void RTLIL::Selection::optimize(RTLIL::Design *design)
 	for (auto &it : selected_members) {
 		del_list.clear();
 		for (auto memb_name : it.second)
-			if (design->modules_[it.first]->count_id(memb_name) == 0)
+			if (current_design->modules_[it.first]->count_id(memb_name) == 0)
 				del_list.push_back(memb_name);
 		for (auto memb_name : del_list)
 			it.second.erase(memb_name);
@@ -832,8 +903,8 @@ void RTLIL::Selection::optimize(RTLIL::Design *design)
 	for (auto &it : selected_members)
 		if (it.second.size() == 0)
 			del_list.push_back(it.first);
-		else if (it.second.size() == design->modules_[it.first]->wires_.size() + design->modules_[it.first]->memories.size() +
-				design->modules_[it.first]->cells_.size() + design->modules_[it.first]->processes.size())
+		else if (it.second.size() == current_design->modules_[it.first]->wires_.size() + current_design->modules_[it.first]->memories.size() +
+				current_design->modules_[it.first]->cells_.size() + current_design->modules_[it.first]->processes.size())
 			add_list.push_back(it.first);
 	for (auto mod_name : del_list)
 		selected_members.erase(mod_name);
@@ -842,11 +913,22 @@ void RTLIL::Selection::optimize(RTLIL::Design *design)
 		selected_modules.insert(mod_name);
 	}
 
-	if (selected_modules.size() == design->modules_.size()) {
-		full_selection = true;
+	if (selected_modules.size() == current_design->modules_.size()) {
 		selected_modules.clear();
 		selected_members.clear();
+		if (selects_boxes)
+			complete_selection = true;
+		else
+			full_selection = true;
 	}
+}
+
+void RTLIL::Selection::clear()
+{
+	full_selection = false;
+	complete_selection = false;
+	selected_modules.clear();
+	selected_members.clear();
 }
 
 RTLIL::Design::Design()
@@ -857,7 +939,7 @@ RTLIL::Design::Design()
 	hashidx_ = hashidx_count;
 
 	refcount_modules_ = 0;
-	selection_stack.push_back(RTLIL::Selection());
+	push_full_selection();
 
 #ifdef WITH_PYTHON
 	RTLIL::Design::get_all_designs()->insert(std::pair<unsigned int, RTLIL::Design*>(hashidx_, this));
@@ -902,7 +984,7 @@ const RTLIL::Module *RTLIL::Design::module(const RTLIL::IdString& name) const
 	return modules_.count(name) ? modules_.at(name) : NULL;
 }
 
-RTLIL::Module *RTLIL::Design::top_module()
+RTLIL::Module *RTLIL::Design::top_module() const
 {
 	RTLIL::Module *module = nullptr;
 	int module_count = 0;
@@ -1060,6 +1142,7 @@ void RTLIL::Design::sort()
 void RTLIL::Design::check()
 {
 #ifndef NDEBUG
+	log_assert(!selection_stack.empty());
 	for (auto &it : modules_) {
 		log_assert(this == it.second->design);
 		log_assert(it.first == it.second->name);
@@ -1083,27 +1166,21 @@ bool RTLIL::Design::selected_module(const RTLIL::IdString& mod_name) const
 {
 	if (!selected_active_module.empty() && mod_name != selected_active_module)
 		return false;
-	if (selection_stack.size() == 0)
-		return true;
-	return selection_stack.back().selected_module(mod_name);
+	return selection().selected_module(mod_name);
 }
 
 bool RTLIL::Design::selected_whole_module(const RTLIL::IdString& mod_name) const
 {
 	if (!selected_active_module.empty() && mod_name != selected_active_module)
 		return false;
-	if (selection_stack.size() == 0)
-		return true;
-	return selection_stack.back().selected_whole_module(mod_name);
+	return selection().selected_whole_module(mod_name);
 }
 
 bool RTLIL::Design::selected_member(const RTLIL::IdString& mod_name, const RTLIL::IdString& memb_name) const
 {
 	if (!selected_active_module.empty() && mod_name != selected_active_module)
 		return false;
-	if (selection_stack.size() == 0)
-		return true;
-	return selection_stack.back().selected_member(mod_name, memb_name);
+	return selection().selected_member(mod_name, memb_name);
 }
 
 bool RTLIL::Design::selected_module(RTLIL::Module *mod) const
@@ -1116,37 +1193,86 @@ bool RTLIL::Design::selected_whole_module(RTLIL::Module *mod) const
 	return selected_whole_module(mod->name);
 }
 
-std::vector<RTLIL::Module*> RTLIL::Design::selected_modules() const
+void RTLIL::Design::push_selection(RTLIL::Selection sel)
 {
-	std::vector<RTLIL::Module*> result;
-	result.reserve(modules_.size());
-	for (auto &it : modules_)
-		if (selected_module(it.first) && !it.second->get_blackbox_attribute())
-			result.push_back(it.second);
-	return result;
+	sel.current_design = this;
+	selection_stack.push_back(sel);
 }
 
-std::vector<RTLIL::Module*> RTLIL::Design::selected_whole_modules() const
+void RTLIL::Design::push_empty_selection()
 {
-	std::vector<RTLIL::Module*> result;
-	result.reserve(modules_.size());
-	for (auto &it : modules_)
-		if (selected_whole_module(it.first) && !it.second->get_blackbox_attribute())
-			result.push_back(it.second);
-	return result;
+	push_selection(RTLIL::Selection::EmptySelection(this));
 }
 
-std::vector<RTLIL::Module*> RTLIL::Design::selected_whole_modules_warn(bool include_wb) const
+void RTLIL::Design::push_full_selection()
 {
+	push_selection(RTLIL::Selection::FullSelection(this));
+}
+
+void RTLIL::Design::push_complete_selection()
+{
+	push_selection(RTLIL::Selection::CompleteSelection(this));
+}
+
+void RTLIL::Design::pop_selection()
+{
+	selection_stack.pop_back();
+	// Default to a full_selection if we ran out of stack
+	if (selection_stack.empty())
+		push_full_selection();
+}
+
+std::vector<RTLIL::Module*> RTLIL::Design::selected_modules(RTLIL::SelectPartials partials, RTLIL::SelectBoxes boxes) const
+{
+	bool include_partials = partials == RTLIL::SELECT_ALL;
+	bool exclude_boxes = (boxes & RTLIL::SB_UNBOXED_ONLY) != 0;
+	bool ignore_wb = (boxes & RTLIL::SB_INCL_WB) != 0;
 	std::vector<RTLIL::Module*> result;
 	result.reserve(modules_.size());
 	for (auto &it : modules_)
-		if (it.second->get_blackbox_attribute(include_wb))
-			continue;
-		else if (selected_whole_module(it.first))
-			result.push_back(it.second);
-		else if (selected_module(it.first))
-			log_warning("Ignoring partially selected module %s.\n", log_id(it.first));
+		if (selected_whole_module(it.first) || (include_partials && selected_module(it.first))) {
+			if (!(exclude_boxes && it.second->get_blackbox_attribute(ignore_wb)))
+				result.push_back(it.second);
+			else
+				switch (boxes)
+				{
+				case RTLIL::SB_UNBOXED_WARN:
+					log_warning("Ignoring boxed module %s.\n", log_id(it.first));
+					break;
+				case RTLIL::SB_EXCL_BB_WARN:
+					log_warning("Ignoring blackbox module %s.\n", log_id(it.first));
+					break;
+				case RTLIL::SB_UNBOXED_ERR:
+					log_error("Unsupported boxed module %s.\n", log_id(it.first));
+					break;
+				case RTLIL::SB_EXCL_BB_ERR:
+					log_error("Unsupported blackbox module %s.\n", log_id(it.first));
+					break;
+				case RTLIL::SB_UNBOXED_CMDERR:
+					log_cmd_error("Unsupported boxed module %s.\n", log_id(it.first));
+					break;
+				case RTLIL::SB_EXCL_BB_CMDERR:
+					log_cmd_error("Unsupported blackbox module %s.\n", log_id(it.first));
+					break;
+				default:
+					break;
+				}
+		} else if (!include_partials && selected_module(it.first)) {
+			switch(partials)
+			{
+			case RTLIL::SELECT_WHOLE_WARN:
+				log_warning("Ignoring partially selected module %s.\n", log_id(it.first));
+				break;
+			case RTLIL::SELECT_WHOLE_ERR:
+				log_error("Unsupported partially selected module %s.\n", log_id(it.first));
+				break;
+			case RTLIL::SELECT_WHOLE_CMDERR:
+				log_cmd_error("Unsupported partially selected module %s.\n", log_id(it.first));
+				break;
+			default:
+				break;
+			}
+		}
 	return result;
 }
 
@@ -1458,6 +1584,40 @@ namespace {
 				port(ID::Y, param(ID::Y_WIDTH));
 				check_expected();
 				Macc().from_cell(cell);
+				return;
+			}
+
+			if (cell->type == ID($macc_v2)) {
+				if (param(ID::NPRODUCTS) < 0)
+					error(__LINE__);
+				if (param(ID::NADDENDS) < 0)
+					error(__LINE__);
+				param_bits(ID::PRODUCT_NEGATED, max(param(ID::NPRODUCTS), 1));
+				param_bits(ID::ADDEND_NEGATED, max(param(ID::NADDENDS), 1));
+				param_bits(ID::A_SIGNED, max(param(ID::NPRODUCTS), 1));
+				param_bits(ID::B_SIGNED, max(param(ID::NPRODUCTS), 1));
+				param_bits(ID::C_SIGNED, max(param(ID::NADDENDS), 1));
+				if (cell->getParam(ID::A_SIGNED) != cell->getParam(ID::B_SIGNED))
+					error(__LINE__);
+				param_bits(ID::A_WIDTHS, max(param(ID::NPRODUCTS) * 16, 1));
+				param_bits(ID::B_WIDTHS, max(param(ID::NPRODUCTS) * 16, 1));
+				param_bits(ID::C_WIDTHS, max(param(ID::NADDENDS) * 16, 1));
+				const Const &a_width = cell->getParam(ID::A_WIDTHS);
+				const Const &b_width = cell->getParam(ID::B_WIDTHS);
+				const Const &c_width = cell->getParam(ID::C_WIDTHS);
+				int a_width_sum = 0, b_width_sum = 0, c_width_sum = 0;
+				for (int i = 0; i < param(ID::NPRODUCTS); i++) {
+					a_width_sum += a_width.extract(16 * i, 16).as_int(false);
+					b_width_sum += b_width.extract(16 * i, 16).as_int(false);
+				}
+				for (int i = 0; i < param(ID::NADDENDS); i++) {
+					c_width_sum += c_width.extract(16 * i, 16).as_int(false);
+				}
+				port(ID::A, a_width_sum);
+				port(ID::B, b_width_sum);
+				port(ID::C, c_width_sum);
+				port(ID::Y, param(ID::Y_WIDTH));
+				check_expected();
 				return;
 			}
 
@@ -2012,7 +2172,7 @@ namespace {
 				param(ID::TYPE);
 				check_expected();
 				std::string scope_type = cell->getParam(ID::TYPE).decode_string();
-				if (scope_type != "module" && scope_type != "struct")
+				if (scope_type != "module" && scope_type != "struct" && scope_type != "blackbox")
 					error(__LINE__);
 				return;
 			}
@@ -2244,6 +2404,20 @@ void RTLIL::Module::check()
 			log_assert(!packed_memids.count(memid));
 			packed_memids.insert(memid);
 		}
+		auto cell_mod = design->module(it.first);
+		if (cell_mod != nullptr) {
+			// assertion check below to make sure that there are no
+			// cases where a cell has a blackbox attribute since
+			// that is deprecated
+			#ifdef __GNUC__
+			#pragma GCC diagnostic push
+			#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+			#endif
+			log_assert(!it.second->get_blackbox_attribute());
+			#ifdef __GNUC__
+			#pragma GCC diagnostic pop
+			#endif
+		}
 	}
 
 	for (auto &it : processes) {
@@ -2371,6 +2545,16 @@ bool RTLIL::Module::has_processes_warn() const
 	return !processes.empty();
 }
 
+bool RTLIL::Module::is_selected() const
+{
+	return design->selected_module(this->name);
+}
+
+bool RTLIL::Module::is_selected_whole() const
+{
+	return design->selected_whole_module(this->name);
+}
+
 std::vector<RTLIL::Wire*> RTLIL::Module::selected_wires() const
 {
 	std::vector<RTLIL::Wire*> result;
@@ -2388,6 +2572,40 @@ std::vector<RTLIL::Cell*> RTLIL::Module::selected_cells() const
 	for (auto &it : cells_)
 		if (design->selected(this, it.second))
 			result.push_back(it.second);
+	return result;
+}
+
+std::vector<RTLIL::Memory*> RTLIL::Module::selected_memories() const
+{
+	std::vector<RTLIL::Memory*> result;
+	result.reserve(memories.size());
+	for (auto &it : memories)
+		if (design->selected(this, it.second))
+			result.push_back(it.second);
+	return result;
+}
+
+std::vector<RTLIL::Process*> RTLIL::Module::selected_processes() const
+{
+	std::vector<RTLIL::Process*> result;
+	result.reserve(processes.size());
+	for (auto &it : processes)
+		if (design->selected(this, it.second))
+			result.push_back(it.second);
+	return result;
+}
+
+std::vector<RTLIL::NamedObject*> RTLIL::Module::selected_members() const
+{
+	std::vector<RTLIL::NamedObject*> result;
+	auto cells = selected_cells();
+	auto memories = selected_memories();
+	auto wires = selected_wires();
+	auto processes = selected_processes();
+	result.insert(result.end(), cells.begin(), cells.end());
+	result.insert(result.end(), memories.begin(), memories.end());
+	result.insert(result.end(), wires.begin(), wires.end());
+	result.insert(result.end(), processes.begin(), processes.end());
 	return result;
 }
 
@@ -4093,6 +4311,11 @@ void RTLIL::Cell::fixup_parameters(bool set_a_signed, bool set_b_signed)
 		return;
 	}
 
+	if (type == ID($macc_v2)) {
+		parameters[ID::Y_WIDTH] = GetSize(connections_[ID::Y]);
+		return;
+	}
+
 	bool signedness_ab = !type.in(ID($slice), ID($concat), ID($macc));
 
 	if (connections_.count(ID::A)) {
@@ -5276,6 +5499,47 @@ int RTLIL::SigSpec::as_int(bool is_signed) const
 	if (width_)
 		return RTLIL::Const(chunks_[0].data).as_int(is_signed);
 	return 0;
+}
+
+bool RTLIL::SigSpec::convertible_to_int(bool is_signed) const
+{
+	cover("kernel.rtlil.sigspec.convertible_to_int");
+
+	pack();
+	if (!is_fully_const())
+		return false;
+
+	if (empty())
+		return true;
+
+	return RTLIL::Const(chunks_[0].data).convertible_to_int(is_signed);
+}
+
+std::optional<int> RTLIL::SigSpec::try_as_int(bool is_signed) const
+{
+	cover("kernel.rtlil.sigspec.try_as_int");
+
+	pack();
+	if (!is_fully_const())
+		return std::nullopt;
+
+	if (empty())
+		return 0;
+
+	return RTLIL::Const(chunks_[0].data).try_as_int(is_signed);
+}
+
+int RTLIL::SigSpec::as_int_saturating(bool is_signed) const
+{
+	cover("kernel.rtlil.sigspec.try_as_int");
+
+	pack();
+	log_assert(is_fully_const() && GetSize(chunks_) <= 1);
+
+	if (empty())
+		return 0;
+
+	return RTLIL::Const(chunks_[0].data).as_int_saturating(is_signed);
 }
 
 std::string RTLIL::SigSpec::as_string() const

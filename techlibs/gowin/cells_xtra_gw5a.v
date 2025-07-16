@@ -1,53 +1,6 @@
 // Created by cells_xtra.py
 
 
-module MUX2_MUX8 (...);
-input I0,I1;
-input S0;
-output O;
-endmodule
-
-
-module MUX2_MUX16 (...);
-input I0,I1;
-input S0;
-output O;
-endmodule
-
-
-module MUX2_MUX32 (...);
-input I0,I1;
-input S0;
-output O;
-endmodule
-
-
-module MUX4 (...);
-input I0, I1, I2, I3;
-input S0, S1;
-output O;
-endmodule
-
-
-module MUX8 (...);
-input I0, I1, I2, I3, I4, I5, I6, I7;
-input S0, S1, S2;
-output O;
-endmodule
-
-
-module MUX16 (...);
-input I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15;
-input S0, S1, S2, S3;
-output O;
-endmodule
-
-module MUX32 (...);
-input I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31;
-input S0, S1, S2, S3, S4;
-output O;
-endmodule
-
 module LUT5 (...);
 parameter INIT = 32'h00000000;
 input I0, I1, I2, I3, I4;
@@ -73,20 +26,6 @@ module LUT8 (...);
 parameter INIT = 256'h0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000;
 input I0, I1, I2, I3, I4, I5, I6, I7;
 output F;
-endmodule
-
-
-module DLCE (...);
-input D, G, CLEAR, GE;
-output Q;
-parameter INIT = 1'b0;
-endmodule
-
-
-module DLPE (...);
-input D, G, PRESET, GE;
-output Q;
-parameter INIT = 1'b1;
 endmodule
 
 
@@ -1139,6 +1078,12 @@ output  Q0,  Q1;
 endmodule
 
 
+module OSER14 (...);
+input D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13;
+input PCLK, FCLK, RESET;
+output  Q;
+endmodule
+
 module IODELAY (...);
 parameter C_STATIC_DLY = 0; 
 parameter DYN_DLY_EN = "FALSE";
@@ -1777,148 +1722,10 @@ endmodule
 module ADC (...);
 endmodule
 
-module MIPI_DPHY_RX (...);
-output D0LN_DESKEW_DONE,D1LN_DESKEW_DONE,D2LN_DESKEW_DONE,D3LN_DESKEW_DONE;
-output [15:0] D0LN_HSRXD, D1LN_HSRXD, D2LN_HSRXD, D3LN_HSRXD;
-output D0LN_HSRXD_VLD,D1LN_HSRXD_VLD,D2LN_HSRXD_VLD,D3LN_HSRXD_VLD;
-output DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N, DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P;
-output DI_LPRXCK_N, DI_LPRXCK_P;
-output RX_CLK_O;          
-output DESKEW_ERROR;      
-inout  CK_N, CK_P, RX0_N, RX0_P, RX1_N, RX1_P, RX2_N, RX2_P, RX3_N, RX3_P;
-input BYTE_LENDIAN;       
-input [2:0] FIFO_RD_STD;  
-input HSRX_STOP;          
-input PWRON;              
-input RESET;              
-input D0LN_HSRX_DREN,  D1LN_HSRX_DREN, D2LN_HSRX_DREN, D3LN_HSRX_DREN;
-input DESKEW_BY,DESKEW_EN_OEDGE;
-input [5:0] DESKEW_HALF_OPENING;
-input [2:0] DESKEW_LNSEL; 
-input [1:0] DESKEW_LSB_MODE;
-input [2:0] DESKEW_M;
-input [12:0] DESKEW_MTH;   
-input [6:0] DESKEW_MSET;
-input DESKEW_OCLKEDG_EN;
-input [6:0] DESKEW_OWVAL;
-input DESKEW_REQ;         
-input DO_LPTX0_N, DO_LPTX0_P, DO_LPTX1_N, DO_LPTX1_P, DO_LPTX2_N, DO_LPTX2_P, DO_LPTX3_N, DO_LPTX3_P;
-input DO_LPTXCK_N, DO_LPTXCK_P;
-input DRST_N;             
-input [2:0] EQCS_LANE0,EQCS_LANE1,EQCS_LANE2,EQCS_LANE3,EQCS_CK;
-input [2:0] EQRS_LANE0,EQRS_LANE1,EQRS_LANE2,EQRS_LANE3,EQRS_CK;
-input HS_8BIT_MODE;       
-input HSRX_DLYDIR_LANE0, HSRX_DLYDIR_LANE1,HSRX_DLYDIR_LANE2,HSRX_DLYDIR_LANE3,HSRX_DLYDIR_CK;
-input HSRX_DLYLDN_LANE0, HSRX_DLYLDN_LANE1,HSRX_DLYLDN_LANE2,HSRX_DLYLDN_LANE3,HSRX_DLYLDN_CK;
-input HSRX_DLYMV_LANE0, HSRX_DLYMV_LANE1,HSRX_DLYMV_LANE2,HSRX_DLYMV_LANE3,HSRX_DLYMV_CK;
-input HSRX_EN_CK;         
-input HSRX_ODTEN_CK, HSRX_ODTEN_D0,  HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3;
-input LALIGN_EN;          
-input LPRX_EN_CK, LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3;
-input LPTX_EN_CK, LPTX_EN_D0, LPTX_EN_D1, LPTX_EN_D2, LPTX_EN_D3;
-input ONE_BYTE0_MATCH;    
-input RX_CLK_1X;          
-input RX_INVERT;          
-input WALIGN_BY;          
-input WALIGN_DVLD;
-input WORD_LENDIAN;       
-parameter ALIGN_BYTE = 8'b10111000;
-parameter EN_CLKB1X = 1'b1;
-parameter EQ_ADPSEL_LANE0 = 1'b0;
-parameter EQ_ADPSEL_LANE1 = 1'b0;
-parameter EQ_ADPSEL_LANE2 = 1'b0;
-parameter EQ_ADPSEL_LANE3 = 1'b0;
-parameter EQ_ADPSEL_CK = 1'b0;
-parameter EQ_CS_LANE0 = 3'b100;
-parameter EQ_CS_LANE1 = 3'b100;
-parameter EQ_CS_LANE2 = 3'b100;
-parameter EQ_CS_LANE3 = 3'b100;
-parameter EQ_CS_CK = 3'b100;
-parameter EQ_PBIAS_LANE0 = 4'b0100;
-parameter EQ_PBIAS_LANE1 = 4'b0100;
-parameter EQ_PBIAS_LANE2 = 4'b0100;
-parameter EQ_PBIAS_LANE3 = 4'b0100;
-parameter EQ_PBIAS_CK = 4'b0100;
-parameter EQ_RS_LANE0 = 3'b100;
-parameter EQ_RS_LANE1 = 3'b100;
-parameter EQ_RS_LANE2 = 3'b100;
-parameter EQ_RS_LANE3 = 3'b100;
-parameter EQ_RS_CK = 3'b100;
-parameter EQ_ZLD_LANE0 = 4'b1000;
-parameter EQ_ZLD_LANE1 = 4'b1000;
-parameter EQ_ZLD_LANE2 = 4'b1000;
-parameter EQ_ZLD_LANE3 = 4'b1000;
-parameter EQ_ZLD_CK = 4'b1000;
-parameter HIGH_BW_LANE0 = 1'b1;
-parameter HIGH_BW_LANE1 = 1'b1;
-parameter HIGH_BW_LANE2 = 1'b1;
-parameter HIGH_BW_LANE3 = 1'b1;
-parameter HIGH_BW_CK = 1'b1;
-parameter HSRX_DLYCTL_CK = 7'b0000000;
-parameter HSRX_DLYCTL_LANE0 = 7'b0000000;
-parameter HSRX_DLYCTL_LANE1 = 7'b0000000;
-parameter HSRX_DLYCTL_LANE2 = 7'b0000000;
-parameter HSRX_DLYCTL_LANE3 = 7'b0000000;
-parameter HSRX_DLY_SEL = 1'b0;
-parameter HSRX_DUTY_LANE0 = 4'b1000;
-parameter HSRX_DUTY_LANE1 = 4'b1000;
-parameter HSRX_DUTY_LANE2 = 4'b1000;
-parameter HSRX_DUTY_LANE3 = 4'b1000;
-parameter HSRX_DUTY_CK = 4'b1000;
-parameter HSRX_EN = 1'b1;
-parameter HSRX_EQ_EN_LANE0 = 1'b1;
-parameter HSRX_EQ_EN_LANE1 = 1'b1;
-parameter HSRX_EQ_EN_LANE2 = 1'b1;
-parameter HSRX_EQ_EN_LANE3 = 1'b1;
-parameter HSRX_EQ_EN_CK = 1'b1;
-parameter HSRX_IBIAS = 4'b0011;
-parameter HSRX_IMARG_EN = 1'b1;
-parameter MIPI_LANE0_EN = 1'b0;
-parameter MIPI_LANE1_EN = 1'b0;
-parameter MIPI_LANE2_EN = 1'b0;
-parameter MIPI_LANE3_EN = 1'b0;
-parameter MIPI_CK_EN = 1'b1;
-parameter HSRX_ODT_EN = 1'b1;
-parameter HSRX_ODT_TST = 4'b0000;
-parameter HSRX_ODT_TST_CK = 1'b0;
-parameter HSRX_STOP_EN = 1'b0;
-parameter HSRX_TST = 4'b0000;
-parameter HSRX_TST_CK = 1'b0;
-parameter HSRX_WAIT4EDGE = 1'b0;
-parameter HYST_NCTL = 2'b01;
-parameter HYST_PCTL = 2'b01;
-parameter LOW_LPRX_VTH = 1'b0;
-parameter LPRX_EN = 1'b1;
-parameter LPRX_TST = 4'b0000;
-parameter LPRX_TST_CK = 1'b0;
-parameter LPTX_EN = 1'b1;
-parameter LPTX_SW_LANE0 = 3'b100;
-parameter LPTX_SW_LANE1 = 3'b100;
-parameter LPTX_SW_LANE2 = 3'b100;
-parameter LPTX_SW_LANE3 = 3'b100;
-parameter LPTX_SW_CK = 3'b100;
-parameter LPTX_TST = 4'b0000;
-parameter LPTX_TST_CK = 1'b0;
-parameter MIPI_DIS_N = 1'b1;
-parameter PGA_BIAS_LANE0 =  4'b1000;
-parameter PGA_BIAS_LANE1 =  4'b1000;
-parameter PGA_BIAS_LANE2 =  4'b1000;
-parameter PGA_BIAS_LANE3 =  4'b1000;
-parameter PGA_BIAS_CK =  4'b1000;
-parameter PGA_GAIN_LANE0 =  4'b1000;
-parameter PGA_GAIN_LANE1 =  4'b1000;
-parameter PGA_GAIN_LANE2 =  4'b1000;
-parameter PGA_GAIN_LANE3 =  4'b1000;
-parameter PGA_GAIN_CK =  4'b1000;
-parameter RX_CLK1X_SYNC_SEL = 1'b0;
-parameter RX_ODT_TRIM_LANE0 = 4'b0111;
-parameter RX_ODT_TRIM_LANE1 = 4'b0111;
-parameter RX_ODT_TRIM_LANE2 = 4'b0111;
-parameter RX_ODT_TRIM_LANE3 = 4'b0111;
-parameter RX_ODT_TRIM_CK = 4'b0111;
-parameter STP_UNIT = 2'b00;
-parameter SYNC_CLK_SEL = 1'b1;
-parameter WALIGN_DVLD_SRC_SEL = 1'b0;
+module ADC_SAR (...);
+endmodule
+
+module LICD (...);
 endmodule
 
 module MIPI_DPHY (...);
@@ -1928,14 +1735,17 @@ output D0LN_HSRXD_VLD,D1LN_HSRXD_VLD,D2LN_HSRXD_VLD,D3LN_HSRXD_VLD;
 input  D0LN_HSRX_DREN, D1LN_HSRX_DREN,  D2LN_HSRX_DREN,  D3LN_HSRX_DREN;
 output  DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N,  DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P, DI_LPRXCK_N, DI_LPRXCK_P;
 inout  CK_N, CK_P, D0_N, D0_P, D1_N, D1_P, D2_N, D2_P, D3_N, D3_P;
-input HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK;
+input HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK,
+     LPTXEN_LN0, LPTXEN_LN1, LPTXEN_LN2, LPTXEN_LN3, LPTXEN_LNCK;
 input PWRON_RX, PWRON_TX, RESET, RX_CLK_1X, TX_CLK_1X;
 input TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN;
 input [15:0]  CKLN_HSTXD,D0LN_HSTXD,D1LN_HSTXD,D2LN_HSTXD,D3LN_HSTXD;
 input HSTXD_VLD;
 input CK0, CK90, CK180, CK270;
 input DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N, DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P, DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P;
-input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK;
+input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, 
+     HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK,
+     LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3; 
 input RX_DRST_N, TX_DRST_N, WALIGN_DVLD;
 output [7:0] MRDATA;
 input MA_INC, MCLK;
@@ -2221,14 +2031,17 @@ output D0LN_HSRXD_VLD,D1LN_HSRXD_VLD,D2LN_HSRXD_VLD,D3LN_HSRXD_VLD;
 input  D0LN_HSRX_DREN, D1LN_HSRX_DREN,  D2LN_HSRX_DREN,  D3LN_HSRX_DREN;
 output  DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N,  DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P, DI_LPRXCK_N, DI_LPRXCK_P;
 inout  CK_N, CK_P, D0_N, D0_P, D1_N, D1_P, D2_N, D2_P, D3_N, D3_P;
-input HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK;
+input HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK,
+     LPTXEN_LN0, LPTXEN_LN1, LPTXEN_LN2, LPTXEN_LN3, LPTXEN_LNCK;
 input PWRON_RX, PWRON_TX, RESET, RX_CLK_1X, TX_CLK_1X;
 input TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN;
 input [15:0]  CKLN_HSTXD,D0LN_HSTXD,D1LN_HSTXD,D2LN_HSTXD,D3LN_HSTXD;
 input HSTXD_VLD;
 input CK0, CK90, CK180, CK270;
 input DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N, DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P, DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P;
-input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK;
+input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, 
+     HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK,
+     LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3; 
 input RX_DRST_N, TX_DRST_N, WALIGN_DVLD;
 output [7:0] MRDATA;
 input MA_INC, MCLK;
