@@ -20,10 +20,10 @@
 #ifndef CONSTEVAL_H
 #define CONSTEVAL_H
 
-#include "kernel/rtlil.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/macc.h"
+#include "rtlil.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "macc.h"
 
 YOSYS_NAMESPACE_BEGIN
 

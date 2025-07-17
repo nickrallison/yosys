@@ -20,7 +20,7 @@
 #ifndef COST_H
 #define COST_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

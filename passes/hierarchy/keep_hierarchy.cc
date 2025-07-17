@@ -18,8 +18,8 @@
  */
 
 #include <inttypes.h>
-#include "kernel/yosys.h"
-#include "kernel/cost.h"
+#include "yosys.h"
+#include "cost.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

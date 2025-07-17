@@ -5,8 +5,8 @@
 // binary, for any purpose, commercial or non-commercial, and by any
 // means.
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "sigtools.h"
 
 #include <string>
 #include <map>

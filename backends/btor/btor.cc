@@ -22,15 +22,15 @@
 // Computer Aided Verification - 30th International Conference, CAV 2018
 // https://cs.stanford.edu/people/niemetz/publication/2018/niemetzpreinerwolfbiere-cav18/
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/mem.h"
-#include "kernel/json.h"
-#include "kernel/yw.h"
-#include "kernel/utils.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
+#include "mem.h"
+#include "json.h"
+#include "yw.h"
+#include "utils.h"
 #include <string>
 
 USING_YOSYS_NAMESPACE

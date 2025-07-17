@@ -21,13 +21,13 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/sigtools.h"
-#include "kernel/ff.h"
-#include "kernel/mem.h"
-#include "kernel/fmt.h"
+#include "register.h"
+#include "celltypes.h"
+#include "log.h"
+#include "sigtools.h"
+#include "ff.h"
+#include "mem.h"
+#include "fmt.h"
 #include "backends/verilog/verilog_backend.h"
 #include <string>
 #include <sstream>

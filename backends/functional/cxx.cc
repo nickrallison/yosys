@@ -18,8 +18,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/functional.h"
+#include "yosys.h"
+#include "functional.h"
 #include <ctype.h>
 
 USING_YOSYS_NAMESPACE

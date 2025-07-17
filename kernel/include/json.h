@@ -20,7 +20,7 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "libs/json11/json11.hpp"
 #include <functional>
 

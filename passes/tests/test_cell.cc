@@ -18,12 +18,12 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/satgen.h"
-#include "kernel/consteval.h"
-#include "kernel/celledges.h"
-#include "kernel/macc.h"
-#include "kernel/cost.h"
+#include "yosys.h"
+#include "satgen.h"
+#include "consteval.h"
+#include "celledges.h"
+#include "macc.h"
+#include "cost.h"
 #include <algorithm>
 
 USING_YOSYS_NAMESPACE

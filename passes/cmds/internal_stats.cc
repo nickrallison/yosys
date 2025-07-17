@@ -21,10 +21,10 @@
 #include <optional>
 #include <stdint.h>
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "celltypes.h"
 #include "passes/techmap/libparse.h"
-#include "kernel/cost.h"
+#include "cost.h"
 #include "frontends/ast/ast.h"
 #include "libs/json11/json11.hpp"
 

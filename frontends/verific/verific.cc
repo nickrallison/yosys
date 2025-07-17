@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/utils.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
+#include "utils.h"
 #include "libs/sha1/sha1.h"
 #include <stdlib.h>
 #include <stdio.h>

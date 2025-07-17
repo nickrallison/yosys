@@ -18,8 +18,8 @@
  */
 
 #include "simplemap.h"
-#include "kernel/sigtools.h"
-#include "kernel/ff.h"
+#include "sigtools.h"
+#include "ff.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

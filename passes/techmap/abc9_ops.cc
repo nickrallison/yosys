@@ -18,11 +18,11 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/utils.h"
-#include "kernel/celltypes.h"
-#include "kernel/timinginfo.h"
+#include "register.h"
+#include "sigtools.h"
+#include "utils.h"
+#include "celltypes.h"
+#include "timinginfo.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

@@ -17,10 +17,10 @@
  *  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
+#include "celltypes.h"
+#include "log.h"
+#include "register.h"
+#include "rtlil.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

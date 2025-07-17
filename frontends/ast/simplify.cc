@@ -26,7 +26,7 @@
  *
  */
 
-#include "kernel/log.h"
+#include "log.h"
 #include "libs/sha1/sha1.h"
 #include "frontends/verilog/verilog_frontend.h"
 #include "ast.h"

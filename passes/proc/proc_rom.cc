@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/log.h"
-#include "kernel/mem.h"
+#include "register.h"
+#include "sigtools.h"
+#include "log.h"
+#include "mem.h"
 #include <stdlib.h>
 #include <stdio.h>
 

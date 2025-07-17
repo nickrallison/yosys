@@ -1,6 +1,6 @@
-#include "kernel/yosys_common.h"
-#include "kernel/log.h"
-#include "kernel/gzip.h"
+#include "yosys_common.h"
+#include "log.h"
+#include "gzip.h"
 #include <iostream>
 #include <string>
 #include <cstdarg>

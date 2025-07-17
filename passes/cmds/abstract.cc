@@ -1,7 +1,7 @@
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
-#include "kernel/ff.h"
-#include "kernel/ffinit.h"
+#include "yosys.h"
+#include "celltypes.h"
+#include "ff.h"
+#include "ffinit.h"
 #include <variant>
 #include <charconv>
 

@@ -20,8 +20,8 @@
 #ifndef FFINIT_H
 #define FFINIT_H
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "sigtools.h"
 
 YOSYS_NAMESPACE_BEGIN
 

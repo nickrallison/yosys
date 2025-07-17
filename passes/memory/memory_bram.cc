@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/mem.h"
-#include "kernel/ffinit.h"
+#include "yosys.h"
+#include "mem.h"
+#include "ffinit.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

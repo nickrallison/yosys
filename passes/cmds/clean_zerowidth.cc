@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
-#include "kernel/mem.h"
+#include "yosys.h"
+#include "celltypes.h"
+#include "mem.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

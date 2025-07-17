@@ -18,9 +18,9 @@
  *
  */
 
-#include "kernel/functional.h"
-#include "kernel/yosys.h"
-#include "kernel/sexpr.h"
+#include "functional.h"
+#include "yosys.h"
+#include "sexpr.h"
 #include <ctype.h>
 
 USING_YOSYS_NAMESPACE

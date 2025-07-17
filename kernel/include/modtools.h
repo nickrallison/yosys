@@ -20,9 +20,9 @@
 #ifndef MODTOOLS_H
 #define MODTOOLS_H
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "celltypes.h"
 
 YOSYS_NAMESPACE_BEGIN
 

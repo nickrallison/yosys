@@ -17,12 +17,12 @@
  *
  */
 
-#include "kernel/sigtools.h"
-#include "kernel/register.h"
-#include "kernel/cellaigs.h"
-#include "kernel/utils.h"
-#include "kernel/ff.h"
-#include "kernel/mem.h"
+#include "sigtools.h"
+#include "register.h"
+#include "cellaigs.h"
+#include "utils.h"
+#include "ff.h"
+#include "mem.h"
 
 #include <assert.h>
 #include <limits>

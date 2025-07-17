@@ -1,6 +1,6 @@
-#include "kernel/yosys.h"
-#include "kernel/ff.h"
-#include "kernel/gzip.h"
+#include "yosys.h"
+#include "ff.h"
+#include "gzip.h"
 #include "libparse.h"
 #include <optional>
 

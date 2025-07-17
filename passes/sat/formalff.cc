@@ -17,12 +17,12 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/ffinit.h"
-#include "kernel/ff.h"
-#include "kernel/modtools.h"
-#include "kernel/mem.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "ffinit.h"
+#include "ff.h"
+#include "modtools.h"
+#include "mem.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

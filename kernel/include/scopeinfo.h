@@ -23,8 +23,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "celltypes.h"
 
 YOSYS_NAMESPACE_BEGIN
 

@@ -1,5 +1,5 @@
-#include "kernel/cost.h"
-#include "kernel/macc.h"
+#include "cost.h"
+#include "macc.h"
 
 USING_YOSYS_NAMESPACE
 

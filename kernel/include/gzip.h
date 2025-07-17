@@ -1,5 +1,5 @@
 #include <string>
-#include "kernel/yosys_common.h"
+#include "yosys_common.h"
 
 #ifndef YOSYS_GZIP_H
 #define YOSYS_GZIP_H

@@ -18,9 +18,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/timinginfo.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "timinginfo.h"
 #include <deque>
 
 USING_YOSYS_NAMESPACE

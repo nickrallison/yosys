@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/mem.h"
-#include "kernel/ff.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "mem.h"
+#include "ff.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

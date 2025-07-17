@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/log.h"
-#include "kernel/mem.h"
+#include "register.h"
+#include "log.h"
+#include "mem.h"
 #include <sstream>
 #include <set>
 #include <stdlib.h>

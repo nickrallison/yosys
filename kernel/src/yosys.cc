@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "celltypes.h"
 
 #ifdef YOSYS_ENABLE_READLINE
 #  include <readline/readline.h>
@@ -212,7 +212,7 @@ void yosys_setup()
 	init_abc_executable_name();
 
 #define X(_id) RTLIL::ID::_id = "\\" # _id;
-#include "kernel/constids.inc"
+#include "constids.inc"
 #undef X
 
 	Pass::init_register();

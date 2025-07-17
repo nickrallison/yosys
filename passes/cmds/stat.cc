@@ -19,11 +19,11 @@
 
 #include <iterator>
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "celltypes.h"
 #include "passes/techmap/libparse.h"
-#include "kernel/cost.h"
-#include "kernel/gzip.h"
+#include "cost.h"
+#include "gzip.h"
 #include "libs/json11/json11.hpp"
 
 USING_YOSYS_NAMESPACE

@@ -21,7 +21,7 @@
 #ifndef TIMINGINFO_H
 #define TIMINGINFO_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

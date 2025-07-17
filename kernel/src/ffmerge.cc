@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/ffmerge.h"
+#include "ffmerge.h"
 
 USING_YOSYS_NAMESPACE
 

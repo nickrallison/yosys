@@ -29,8 +29,8 @@
 #ifndef AST_BINDING_H
 #define AST_BINDING_H
 
-#include "kernel/rtlil.h"
-#include "kernel/binding.h"
+#include "rtlil.h"
+#include "binding.h"
 
 #include <memory>
 

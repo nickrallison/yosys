@@ -16,8 +16,8 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "kernel/sigtools.h"
-#include "kernel/yosys.h"
+#include "sigtools.h"
+#include "yosys.h"
 #include <deque>
 
 USING_YOSYS_NAMESPACE

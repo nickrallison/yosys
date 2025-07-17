@@ -20,7 +20,7 @@
 #ifndef TOPO_SCC_H
 #define TOPO_SCC_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

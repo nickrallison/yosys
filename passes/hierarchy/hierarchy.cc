@@ -18,7 +18,7 @@
  *
  */
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "frontends/verific/verific.h"
 #include <stdlib.h>
 #include <stdio.h>

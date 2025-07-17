@@ -20,7 +20,7 @@
 #ifndef FSTDATA_H
 #define FSTDATA_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "libs/fst/fstapi.h"
 
 YOSYS_NAMESPACE_BEGIN

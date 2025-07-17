@@ -20,7 +20,7 @@
 #ifndef ABC_BLIFPARSE
 #define ABC_BLIFPARSE
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

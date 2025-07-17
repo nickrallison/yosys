@@ -18,7 +18,7 @@
  */
 
 #include "libs/bigint/BigUnsigned.hh"
-#include "kernel/fmt.h"
+#include "fmt.h"
 
 USING_YOSYS_NAMESPACE
 

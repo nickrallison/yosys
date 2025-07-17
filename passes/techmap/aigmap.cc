@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/cellaigs.h"
+#include "yosys.h"
+#include "cellaigs.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

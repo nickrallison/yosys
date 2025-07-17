@@ -17,15 +17,15 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/mem.h"
-#include "kernel/fstdata.h"
-#include "kernel/ff.h"
-#include "kernel/yw.h"
-#include "kernel/json.h"
-#include "kernel/fmt.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "mem.h"
+#include "fstdata.h"
+#include "ff.h"
+#include "yw.h"
+#include "json.h"
+#include "fmt.h"
 
 #include <ctime>
 

@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/sigtools.h"
+#include "register.h"
+#include "celltypes.h"
+#include "log.h"
+#include "sigtools.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <set>

@@ -21,7 +21,7 @@
 #ifndef ABC_AIGERPARSE
 #define ABC_AIGERPARSE
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

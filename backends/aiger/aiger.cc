@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/json.h"
-#include "kernel/yw.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "json.h"
+#include "yw.h"
 #include "libs/json11/json11.hpp"
 
 USING_YOSYS_NAMESPACE

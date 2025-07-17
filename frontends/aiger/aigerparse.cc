@@ -35,9 +35,9 @@
 #endif
 #include <inttypes.h>
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "celltypes.h"
 #include "aigerparse.h"
 
 YOSYS_NAMESPACE_BEGIN

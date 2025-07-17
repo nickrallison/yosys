@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "log.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

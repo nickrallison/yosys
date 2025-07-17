@@ -21,11 +21,11 @@
 // University of California. Berkeley. July 28, 1992
 // http://www.ece.cmu.edu/~ee760/760docs/blif.pdf
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
 #include <string>
 
 USING_YOSYS_NAMESPACE

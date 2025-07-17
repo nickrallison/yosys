@@ -41,13 +41,13 @@
 #define ABC_FAST_COMMAND_SOP "strash; dretime; cover {I} {P}"
 #define ABC_FAST_COMMAND_DFL "strash; dretime; map"
 
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/ffinit.h"
-#include "kernel/ff.h"
-#include "kernel/cost.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "ffinit.h"
+#include "ff.h"
+#include "cost.h"
+#include "log.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

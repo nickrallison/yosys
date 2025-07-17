@@ -1,4 +1,4 @@
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

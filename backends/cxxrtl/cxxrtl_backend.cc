@@ -17,15 +17,15 @@
  *
  */
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/utils.h"
-#include "kernel/celltypes.h"
-#include "kernel/mem.h"
-#include "kernel/log.h"
-#include "kernel/fmt.h"
-#include "kernel/scopeinfo.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "utils.h"
+#include "celltypes.h"
+#include "mem.h"
+#include "log.h"
+#include "fmt.h"
+#include "scopeinfo.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

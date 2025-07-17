@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/consteval.h"
+#include "yosys.h"
+#include "consteval.h"
 #include "qbfsat.h"
 
 USING_YOSYS_NAMESPACE

@@ -17,12 +17,12 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/consteval.h"
-#include "kernel/celltypes.h"
-#include "kernel/utils.h"
-#include "kernel/satgen.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "consteval.h"
+#include "celltypes.h"
+#include "utils.h"
+#include "satgen.h"
 
 #include <algorithm>
 #include <queue>

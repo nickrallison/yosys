@@ -21,7 +21,7 @@
 // Schneier, Bruce (1996). Applied Cryptography: Protocols, Algorithms, and Source Code in C,
 // Second Edition (2nd ed.). Wiley. ISBN 978-0-471-11709-4, page 244
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "libs/bigint/BigIntegerLibrary.hh"
 
 YOSYS_NAMESPACE_BEGIN

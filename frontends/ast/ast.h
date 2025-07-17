@@ -26,8 +26,8 @@
 #ifndef AST_H
 #define AST_H
 
-#include "kernel/rtlil.h"
-#include "kernel/fmt.h"
+#include "rtlil.h"
+#include "fmt.h"
 #include <stdint.h>
 #include <set>
 

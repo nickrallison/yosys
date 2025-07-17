@@ -29,7 +29,7 @@
 #ifndef VERILOG_FRONTEND_H
 #define VERILOG_FRONTEND_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "frontends/ast/ast.h"
 #include <stdio.h>
 #include <stdint.h>

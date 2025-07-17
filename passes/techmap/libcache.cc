@@ -17,7 +17,7 @@
  *
  */
 
- #include "kernel/yosys.h"
+ #include "yosys.h"
  #include "passes/techmap/libparse.h"
 
  USING_YOSYS_NAMESPACE

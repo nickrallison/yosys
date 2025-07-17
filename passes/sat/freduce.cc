@@ -17,12 +17,12 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/consteval.h"
-#include "kernel/sigtools.h"
-#include "kernel/log.h"
-#include "kernel/satgen.h"
+#include "register.h"
+#include "celltypes.h"
+#include "consteval.h"
+#include "sigtools.h"
+#include "log.h"
+#include "satgen.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -33,7 +33,7 @@ extern char **environ;
 
 #include "libs/json11/json11.hpp"
 #include "libs/sha1/sha1.h"
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

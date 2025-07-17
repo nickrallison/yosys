@@ -20,8 +20,8 @@
 #ifndef FFMERGE_H
 #define FFMERGE_H
 
-#include "kernel/ffinit.h"
-#include "kernel/ff.h"
+#include "ffinit.h"
+#include "ff.h"
 
 YOSYS_NAMESPACE_BEGIN
 

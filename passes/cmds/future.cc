@@ -17,13 +17,13 @@
  *
  */
 
-#include "kernel/celltypes.h"
-#include "kernel/ff.h"
-#include "kernel/ffinit.h"
-#include "kernel/modtools.h"
-#include "kernel/sigtools.h"
-#include "kernel/utils.h"
-#include "kernel/yosys.h"
+#include "celltypes.h"
+#include "ff.h"
+#include "ffinit.h"
+#include "modtools.h"
+#include "sigtools.h"
+#include "utils.h"
+#include "yosys.h"
 #include <deque>
 
 USING_YOSYS_NAMESPACE

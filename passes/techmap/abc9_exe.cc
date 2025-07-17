@@ -22,8 +22,8 @@
 // Berkeley Logic Synthesis and Verification Group, ABC: A System for Sequential Synthesis and Verification
 // http://www.eecs.berkeley.edu/~alanmi/abc/
 
-#include "kernel/register.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "log.h"
 
 #ifndef _WIN32
 #  include <unistd.h>

@@ -20,8 +20,8 @@
 #ifndef FF_H
 #define FF_H
 
-#include "kernel/yosys.h"
-#include "kernel/ffinit.h"
+#include "yosys.h"
+#include "ffinit.h"
 
 YOSYS_NAMESPACE_BEGIN
 

@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 #ifdef YOSYS_ENABLE_PLUGINS
 #  include <dlfcn.h>

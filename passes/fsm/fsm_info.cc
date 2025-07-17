@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/log.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/consteval.h"
-#include "kernel/celltypes.h"
+#include "log.h"
+#include "register.h"
+#include "sigtools.h"
+#include "consteval.h"
+#include "celltypes.h"
 #include "fsmdata.h"
 #include <string.h>
 

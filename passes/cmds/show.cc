@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "celltypes.h"
+#include "log.h"
 #include <string.h>
 
 #ifndef _WIN32

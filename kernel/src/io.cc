@@ -1,5 +1,5 @@
-#include "kernel/yosys_common.h"
-#include "kernel/log.h"
+#include "yosys_common.h"
+#include "log.h"
 #include <iostream>
 #include <string>
 

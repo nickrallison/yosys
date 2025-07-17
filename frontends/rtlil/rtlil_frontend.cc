@@ -23,8 +23,8 @@
  */
 
 #include "rtlil_frontend.h"
-#include "kernel/register.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "log.h"
 
 void rtlil_frontend_yyerror(char const *s)
 {

@@ -22,10 +22,10 @@
 // Berkeley Logic Synthesis and Verification Group, ABC: A System for Sequential Synthesis and Verification
 // http://www.eecs.berkeley.edu/~alanmi/abc/
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/rtlil.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "celltypes.h"
+#include "rtlil.h"
+#include "log.h"
 
 // abc9_exe.cc
 std::string fold_abc9_cmd(std::string str);

@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/sigtools.h"
-#include "kernel/rtlil.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "celltypes.h"
+#include "sigtools.h"
+#include "rtlil.h"
+#include "log.h"
 #include <tuple>
 
 USING_YOSYS_NAMESPACE

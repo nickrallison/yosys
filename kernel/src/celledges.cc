@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/celledges.h"
+#include "celledges.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

@@ -20,7 +20,7 @@
 #ifndef FMT_H
 #define FMT_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

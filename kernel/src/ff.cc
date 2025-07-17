@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/ff.h"
+#include "ff.h"
 
 USING_YOSYS_NAMESPACE
 

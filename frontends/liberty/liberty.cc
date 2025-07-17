@@ -18,8 +18,8 @@
  */
 
 #include "passes/techmap/libparse.h"
-#include "kernel/register.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "log.h"
 
 YOSYS_NAMESPACE_BEGIN
 

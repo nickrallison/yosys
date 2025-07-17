@@ -20,8 +20,8 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
-#include "kernel/yosys_common.h"
-#include "kernel/yosys.h"
+#include "yosys_common.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

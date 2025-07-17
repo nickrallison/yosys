@@ -20,8 +20,8 @@
 #ifndef YW_H
 #define YW_H
 
-#include "kernel/yosys.h"
-#include "kernel/mem.h"
+#include "yosys.h"
+#include "mem.h"
 
 YOSYS_NAMESPACE_BEGIN
 

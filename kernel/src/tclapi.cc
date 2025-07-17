@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/rtlil.h"
-#include "kernel/yosys.h"
+#include "rtlil.h"
+#include "yosys.h"
 #include "libs/json11/json11.hpp"
 
 #ifdef YOSYS_ENABLE_TCL

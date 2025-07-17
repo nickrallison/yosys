@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/fstdata.h"
+#include "fstdata.h"
 
 USING_YOSYS_NAMESPACE
 

@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "celltypes.h"
+#include "sigtools.h"
 #include <string.h>
 #include <errno.h>
 

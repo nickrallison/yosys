@@ -21,8 +21,8 @@
 // use: yosys -m scopeinfo_example.so
 
 #include "backends/rtlil/rtlil_backend.h"
-#include "kernel/scopeinfo.h"
-#include "kernel/yosys.h"
+#include "scopeinfo.h"
+#include "yosys.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

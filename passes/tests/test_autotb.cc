@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>

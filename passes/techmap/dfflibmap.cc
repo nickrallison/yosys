@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/gzip.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "gzip.h"
 #include "libparse.h"
 #include <string.h>
 #include <errno.h>

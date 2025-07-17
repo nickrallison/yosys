@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "log.h"
 #include <cstdio>
 
 #if defined(_WIN32)

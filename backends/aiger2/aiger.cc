@@ -22,8 +22,8 @@
 //  - undriven wires
 //  - zero-width operands
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
+#include "register.h"
+#include "celltypes.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

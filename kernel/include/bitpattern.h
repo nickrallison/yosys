@@ -20,8 +20,8 @@
 #ifndef BITPATTERN_H
 #define BITPATTERN_H
 
-#include "kernel/log.h"
-#include "kernel/rtlil.h"
+#include "log.h"
+#include "rtlil.h"
 
 YOSYS_NAMESPACE_BEGIN
 

@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
-#include "kernel/utils.h"
+#include "register.h"
+#include "rtlil.h"
+#include "utils.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

@@ -26,9 +26,9 @@
  *
  */
 
-#include "kernel/log.h"
-#include "kernel/utils.h"
-#include "kernel/binding.h"
+#include "log.h"
+#include "utils.h"
+#include "binding.h"
 #include "libs/sha1/sha1.h"
 #include "ast.h"
 #include "ast_binding.h"

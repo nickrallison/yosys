@@ -27,7 +27,7 @@
 #include <sstream>
 
 #ifndef FILTERLIB
-#include "kernel/log.h"
+#include "log.h"
 #endif
 
 using namespace Yosys;

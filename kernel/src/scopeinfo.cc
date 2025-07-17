@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/scopeinfo.h"
+#include "scopeinfo.h"
 
 YOSYS_NAMESPACE_BEGIN
 

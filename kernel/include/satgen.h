@@ -20,10 +20,10 @@
 #ifndef SATGEN_H
 #define SATGEN_H
 
-#include "kernel/rtlil.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/macc.h"
+#include "rtlil.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "macc.h"
 
 #include "libs/ezsat/ezminisat.h"
 

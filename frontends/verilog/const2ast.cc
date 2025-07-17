@@ -35,7 +35,7 @@
  */
 
 #include "verilog_frontend.h"
-#include "kernel/log.h"
+#include "log.h"
 #include <string.h>
 #include <math.h>
 

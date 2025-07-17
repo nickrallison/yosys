@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/macc.h"
+#include "yosys.h"
+#include "macc.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

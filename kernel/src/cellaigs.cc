@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/cellaigs.h"
+#include "cellaigs.h"
 
 YOSYS_NAMESPACE_BEGIN
 

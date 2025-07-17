@@ -18,8 +18,8 @@
  *
  */
 
-#include "kernel/functional.h"
-#include "kernel/topo_scc.h"
+#include "functional.h"
+#include "topo_scc.h"
 #include "ff.h"
 #include "ffinit.h"
 #include <deque>

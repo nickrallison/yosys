@@ -16,9 +16,9 @@
  *  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#include "kernel/yosys.h"
-#include "kernel/celltypes.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "celltypes.h"
+#include "sigtools.h"
 #include "backends/rtlil/rtlil_backend.h"
 
 USING_YOSYS_NAMESPACE

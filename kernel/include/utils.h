@@ -20,7 +20,7 @@
 // This file contains various c++ utility routines and helper classes that
 // do not depend on any other components of yosys (except stuff like log_*).
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 #ifndef UTILS_H
 #define UTILS_H

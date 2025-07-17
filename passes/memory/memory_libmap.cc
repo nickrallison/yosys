@@ -21,10 +21,10 @@
 
 #include <ctype.h>
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/mem.h"
-#include "kernel/qcsat.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "mem.h"
+#include "qcsat.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

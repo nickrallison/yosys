@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "kernel/yosys.h"
-#include "kernel/log.h"
+#include "yosys.h"
+#include "log.h"
 
 YOSYS_NAMESPACE_BEGIN
 

@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/log.h"
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
-#include "kernel/sigtools.h"
+#include "log.h"
+#include "register.h"
+#include "rtlil.h"
+#include "sigtools.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

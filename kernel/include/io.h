@@ -1,6 +1,6 @@
 #include <string>
 #include <stdarg.h>
-#include "kernel/yosys_common.h"
+#include "yosys_common.h"
 
 #ifndef YOSYS_IO_H
 #define YOSYS_IO_H

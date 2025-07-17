@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/satgen.h"
-#include "kernel/ff.h"
+#include "satgen.h"
+#include "ff.h"
 
 USING_YOSYS_NAMESPACE
 

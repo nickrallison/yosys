@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/json.h"
+#include "json.h"
 
 USING_YOSYS_NAMESPACE
 

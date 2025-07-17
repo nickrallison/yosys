@@ -32,7 +32,7 @@
 
 #include "verilog_frontend.h"
 #include "preproc.h"
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "libs/sha1/sha1.h"
 #include <stdarg.h>
 

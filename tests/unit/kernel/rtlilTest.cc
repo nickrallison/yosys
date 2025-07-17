@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "kernel/rtlil.h"
+#include "rtlil.h"
 
 YOSYS_NAMESPACE_BEGIN
 

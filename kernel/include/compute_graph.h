@@ -21,7 +21,7 @@
 #define COMPUTE_GRAPH_H
 
 #include <tuple>
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

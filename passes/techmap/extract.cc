@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "sigtools.h"
+#include "log.h"
 #include "libs/subcircuit/subcircuit.h"
 #include <algorithm>
 #include <stdlib.h>

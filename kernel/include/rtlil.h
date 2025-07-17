@@ -20,8 +20,8 @@
 #ifndef RTLIL_H
 #define RTLIL_H
 
-#include "kernel/yosys_common.h"
-#include "kernel/yosys.h"
+#include "yosys_common.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 
@@ -449,7 +449,7 @@ inline bool RTLIL::IdString::in(const pool<IdString> &&rhs) const { return rhs.c
 namespace RTLIL {
 	namespace ID {
 #define X(_id) extern IdString _id;
-#include "kernel/constids.inc"
+#include "constids.inc"
 #undef X
 	};
 	extern dict<std::string, std::string> constpad;

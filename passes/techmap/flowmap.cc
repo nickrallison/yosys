@@ -95,10 +95,10 @@
 //
 // We call this IR "LUT IR".
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
-#include "kernel/modtools.h"
-#include "kernel/consteval.h"
+#include "yosys.h"
+#include "sigtools.h"
+#include "modtools.h"
+#include "consteval.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

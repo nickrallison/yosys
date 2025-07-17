@@ -55,9 +55,9 @@ synth -top my_design -booth
 //FIXME: These debug prints are broken now, should be fixed or removed.
 //#define DEBUG_CPA
 
-#include "kernel/sigtools.h"
-#include "kernel/yosys.h"
-#include "kernel/macc.h"
+#include "sigtools.h"
+#include "yosys.h"
+#include "macc.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

@@ -20,11 +20,11 @@
 // [[CITE]] EDIF Version 2 0 0 Grammar
 // http://web.archive.org/web/20050730021644/http://www.edif.org/documentation/BNF_GRAMMAR/index.html
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
 #include <string>
 
 USING_YOSYS_NAMESPACE

@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "sigtools.h"
 #include "passes/techmap/simplemap.h"
 #include <stdlib.h>
 #include <stdio.h>

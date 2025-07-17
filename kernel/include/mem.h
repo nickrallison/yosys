@@ -20,9 +20,9 @@
 #ifndef MEM_H
 #define MEM_H
 
-#include "kernel/yosys.h"
-#include "kernel/ffinit.h"
-#include "kernel/utils.h"
+#include "yosys.h"
+#include "ffinit.h"
+#include "utils.h"
 
 YOSYS_NAMESPACE_BEGIN
 

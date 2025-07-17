@@ -23,7 +23,7 @@
 #ifndef VERILOG_PREPROC_H
 #define VERILOG_PREPROC_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 #include <iosfwd>
 #include <list>

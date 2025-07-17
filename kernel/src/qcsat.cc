@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/qcsat.h"
+#include "qcsat.h"
 
 USING_YOSYS_NAMESPACE
 

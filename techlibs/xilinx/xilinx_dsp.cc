@@ -18,8 +18,8 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "sigtools.h"
 #include <deque>
 
 USING_YOSYS_NAMESPACE

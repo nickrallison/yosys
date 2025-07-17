@@ -21,11 +21,11 @@
 #ifndef FUNCTIONAL_H
 #define FUNCTIONAL_H
 
-#include "kernel/yosys.h"
-#include "kernel/compute_graph.h"
-#include "kernel/drivertools.h"
-#include "kernel/mem.h"
-#include "kernel/utils.h"
+#include "yosys.h"
+#include "compute_graph.h"
+#include "drivertools.h"
+#include "mem.h"
+#include "utils.h"
 
 USING_YOSYS_NAMESPACE
 YOSYS_NAMESPACE_BEGIN

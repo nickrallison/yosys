@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/ffinit.h"
-#include "kernel/consteval.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "sigtools.h"
+#include "ffinit.h"
+#include "consteval.h"
+#include "log.h"
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>

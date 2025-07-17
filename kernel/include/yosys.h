@@ -37,11 +37,11 @@
 #ifndef YOSYS_H
 #define YOSYS_H
 
-#include "kernel/yosys_common.h"
+#include "yosys_common.h"
 
-#include "kernel/log.h"
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
+#include "log.h"
+#include "rtlil.h"
+#include "register.h"
 
 #ifdef YOSYS_ENABLE_TCL
 struct Tcl_Interp;

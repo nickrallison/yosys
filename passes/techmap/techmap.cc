@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/utils.h"
-#include "kernel/sigtools.h"
-#include "kernel/ffinit.h"
+#include "yosys.h"
+#include "utils.h"
+#include "sigtools.h"
+#include "ffinit.h"
 #include "libs/sha1/sha1.h"
 
 #include <stdlib.h>

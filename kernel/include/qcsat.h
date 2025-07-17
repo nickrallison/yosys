@@ -20,8 +20,8 @@
 #ifndef QCSAT_H
 #define QCSAT_H
 
-#include "kernel/satgen.h"
-#include "kernel/modtools.h"
+#include "satgen.h"
+#include "modtools.h"
 
 YOSYS_NAMESPACE_BEGIN
 

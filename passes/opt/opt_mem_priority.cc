@@ -17,10 +17,10 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/modtools.h"
-#include "kernel/qcsat.h"
-#include "kernel/mem.h"
+#include "yosys.h"
+#include "modtools.h"
+#include "qcsat.h"
+#include "mem.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

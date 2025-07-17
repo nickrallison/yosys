@@ -20,8 +20,8 @@
 #ifndef CELLEDGES_H
 #define CELLEDGES_H
 
-#include "kernel/yosys.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "sigtools.h"
 
 YOSYS_NAMESPACE_BEGIN
 

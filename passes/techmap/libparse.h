@@ -20,7 +20,7 @@
 #ifndef LIBPARSE_H
 #define LIBPARSE_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include <stdio.h>
 #include <string>
 #include <vector>

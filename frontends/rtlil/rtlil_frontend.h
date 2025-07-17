@@ -25,7 +25,7 @@
 #ifndef RTLIL_FRONTEND_H
 #define RTLIL_FRONTEND_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 
 YOSYS_NAMESPACE_BEGIN
 

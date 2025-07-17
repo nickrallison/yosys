@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/drivertools.h"
+#include "drivertools.h"
 
 YOSYS_NAMESPACE_BEGIN
 

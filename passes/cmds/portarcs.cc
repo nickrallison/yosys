@@ -18,10 +18,10 @@
  */
 
 
-#include "kernel/timinginfo.h"
-#include "kernel/rtlil.h"
-#include "kernel/utils.h"
-#include "kernel/celltypes.h"
+#include "timinginfo.h"
+#include "rtlil.h"
+#include "utils.h"
+#include "celltypes.h"
 
 PRIVATE_NAMESPACE_BEGIN
 USING_YOSYS_NAMESPACE

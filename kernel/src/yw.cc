@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/yw.h"
+#include "yw.h"
 #include "libs/json11/json11.hpp"
 
 USING_YOSYS_NAMESPACE

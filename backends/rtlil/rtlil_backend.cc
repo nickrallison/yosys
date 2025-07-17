@@ -23,7 +23,7 @@
  */
 
 #include "rtlil_backend.h"
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include <errno.h>
 
 USING_YOSYS_NAMESPACE

@@ -21,12 +21,12 @@
 // Niklas Een and Niklas Sörensson (2003)
 // http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.4.8161
 
-#include "kernel/register.h"
-#include "kernel/celltypes.h"
-#include "kernel/consteval.h"
-#include "kernel/sigtools.h"
-#include "kernel/log.h"
-#include "kernel/satgen.h"
+#include "register.h"
+#include "celltypes.h"
+#include "consteval.h"
+#include "sigtools.h"
+#include "log.h"
+#include "satgen.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <algorithm>

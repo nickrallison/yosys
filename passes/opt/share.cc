@@ -17,12 +17,12 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/qcsat.h"
-#include "kernel/sigtools.h"
-#include "kernel/modtools.h"
-#include "kernel/utils.h"
-#include "kernel/macc.h"
+#include "yosys.h"
+#include "qcsat.h"
+#include "sigtools.h"
+#include "modtools.h"
+#include "utils.h"
+#include "macc.h"
 #include <iterator>
 
 USING_YOSYS_NAMESPACE

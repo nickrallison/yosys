@@ -17,14 +17,14 @@
  *
  */
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
-#include "kernel/mem.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
+#include "mem.h"
 #include "libs/json11/json11.hpp"
-#include "kernel/utils.h"
+#include "utils.h"
 #include <string>
 
 USING_YOSYS_NAMESPACE

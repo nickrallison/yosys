@@ -18,14 +18,14 @@
  *
  */
 
-#include "kernel/log.h"
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
-#include "kernel/qcsat.h"
-#include "kernel/modtools.h"
-#include "kernel/sigtools.h"
-#include "kernel/ffinit.h"
-#include "kernel/ff.h"
+#include "log.h"
+#include "register.h"
+#include "rtlil.h"
+#include "qcsat.h"
+#include "modtools.h"
+#include "sigtools.h"
+#include "ffinit.h"
+#include "ff.h"
 #include "passes/techmap/simplemap.h"
 #include <stdio.h>
 #include <stdlib.h>

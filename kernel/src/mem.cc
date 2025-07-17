@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/mem.h"
-#include "kernel/ff.h"
+#include "mem.h"
+#include "ff.h"
 
 USING_YOSYS_NAMESPACE
 

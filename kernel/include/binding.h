@@ -20,7 +20,7 @@
 #ifndef BINDING_H
 #define BINDING_H
 
-#include "kernel/rtlil.h"
+#include "rtlil.h"
 
 YOSYS_NAMESPACE_BEGIN
 

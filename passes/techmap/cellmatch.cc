@@ -1,9 +1,9 @@
-#include "kernel/celltypes.h"
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
-#include "kernel/sigtools.h"
-#include "kernel/consteval.h"
-#include "kernel/utils.h"
+#include "celltypes.h"
+#include "register.h"
+#include "rtlil.h"
+#include "sigtools.h"
+#include "consteval.h"
+#include "utils.h"
 
 #include <algorithm>
 

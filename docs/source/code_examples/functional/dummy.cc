@@ -1,5 +1,5 @@
-#include "kernel/functional.h"
-#include "kernel/yosys.h"
+#include "functional.h"
+#include "yosys.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

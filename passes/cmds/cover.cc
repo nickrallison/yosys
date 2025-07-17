@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include <sys/types.h>
 
 #ifndef _WIN32
@@ -26,9 +26,9 @@
 #  include <io.h>
 #endif
 
-#include "kernel/register.h"
-#include "kernel/rtlil.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "rtlil.h"
+#include "log.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

@@ -134,7 +134,7 @@
 #  define YS_COLD
 #endif
 
-#include "kernel/io.h"
+#include "io.h"
 
 YOSYS_NAMESPACE_BEGIN
 

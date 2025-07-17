@@ -12,8 +12,8 @@ $ yosys-config --build evaldemo.so evaldemo.cc
 $ yosys -m evaldemo.so -p evaldemo evaldemo.v
 */
 
-#include "kernel/yosys.h"
-#include "kernel/consteval.h"
+#include "yosys.h"
+#include "consteval.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

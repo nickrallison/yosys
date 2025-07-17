@@ -71,7 +71,7 @@
 //   expression [->N:$]
 
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "frontends/verific/verific.h"
 
 USING_YOSYS_NAMESPACE

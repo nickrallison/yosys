@@ -22,11 +22,11 @@
 // Circuits and Systems (ISCAS), Proceedings of 2010 IEEE International Symposium on , vol., no., pp.2610,2613, May 30 2010-June 2 2010
 // doi: 10.1109/ISCAS.2010.5537093
 
-#include "kernel/log.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/consteval.h"
-#include "kernel/celltypes.h"
+#include "log.h"
+#include "register.h"
+#include "sigtools.h"
+#include "consteval.h"
+#include "celltypes.h"
 #include "fsmdata.h"
 
 USING_YOSYS_NAMESPACE

@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/macc.h"
-#include "kernel/celltypes.h"
-#include "kernel/binding.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "macc.h"
+#include "celltypes.h"
+#include "binding.h"
+#include "sigtools.h"
 #include "frontends/verilog/verilog_frontend.h"
 #include "frontends/verilog/preproc.h"
 #include "backends/rtlil/rtlil_backend.h"
@@ -46,7 +46,7 @@ int RTLIL::IdString::last_created_idx_ptr_;
 #endif
 
 #define X(_id) IdString RTLIL::ID::_id;
-#include "kernel/constids.inc"
+#include "constids.inc"
 #undef X
 
 dict<std::string, std::string> RTLIL::constpad;

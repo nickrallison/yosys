@@ -17,7 +17,7 @@
  *
  */
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include "frontends/verilog/preproc.h"
 #include "frontends/ast/ast.h"
 

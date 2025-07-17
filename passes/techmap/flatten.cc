@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/yosys.h"
-#include "kernel/utils.h"
-#include "kernel/sigtools.h"
+#include "yosys.h"
+#include "utils.h"
+#include "sigtools.h"
 
 #include <stdlib.h>
 #include <stdio.h>

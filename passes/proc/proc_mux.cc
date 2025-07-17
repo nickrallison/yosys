@@ -17,9 +17,9 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/bitpattern.h"
-#include "kernel/log.h"
+#include "register.h"
+#include "bitpattern.h"
+#include "log.h"
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>

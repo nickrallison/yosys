@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/register.h"
-#include "kernel/ffinit.h"
-#include "kernel/sigtools.h"
-#include "kernel/log.h"
-#include "kernel/celltypes.h"
+#include "register.h"
+#include "ffinit.h"
+#include "sigtools.h"
+#include "log.h"
+#include "celltypes.h"
 #include "libs/sha1/sha1.h"
 #include <stdlib.h>
 #include <stdio.h>

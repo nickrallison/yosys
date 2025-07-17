@@ -34,7 +34,7 @@
 
 #include "preproc.h"
 #include "verilog_frontend.h"
-#include "kernel/log.h"
+#include "log.h"
 #include <assert.h>
 #include <stack>
 #include <stdarg.h>

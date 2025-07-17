@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/sigtools.h"
-#include "kernel/yosys.h"
+#include "sigtools.h"
+#include "yosys.h"
 
 USING_YOSYS_NAMESPACE
 PRIVATE_NAMESPACE_BEGIN

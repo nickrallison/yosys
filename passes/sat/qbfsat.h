@@ -20,7 +20,7 @@
 #ifndef QBFSAT_H
 #define QBFSAT_H
 
-#include "kernel/yosys.h"
+#include "yosys.h"
 #include <numeric>
 
 YOSYS_NAMESPACE_BEGIN

@@ -17,11 +17,11 @@
  *
  */
 
-#include "kernel/rtlil.h"
-#include "kernel/register.h"
-#include "kernel/sigtools.h"
-#include "kernel/celltypes.h"
-#include "kernel/log.h"
+#include "rtlil.h"
+#include "register.h"
+#include "sigtools.h"
+#include "celltypes.h"
+#include "log.h"
 #include <string>
 #include <algorithm>
 #include <unordered_map>
