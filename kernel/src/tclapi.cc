@@ -17,8 +17,8 @@
  *
  */
 
-#include "kernel/yosys.h"
 #include "kernel/rtlil.h"
+#include "kernel/yosys.h"
 #include "libs/json11/json11.hpp"
 
 #ifdef YOSYS_ENABLE_TCL
@@ -32,10 +32,7 @@ YOSYS_NAMESPACE_BEGIN
 #ifdef YOSYS_ENABLE_TCL
 bool yosys_tcl_repl_active = false;
 
-void yosys_tcl_activate_repl()
-{
-	yosys_tcl_repl_active = true;
-}
+void yosys_tcl_activate_repl() { yosys_tcl_repl_active = true; }
 
 static Tcl_Obj *json_to_tcl(Tcl_Interp *interp, const json11::Json &json)
 {
@@ -145,22 +142,22 @@ static int tcl_yosys_cmd(ClientData, Tcl_Interp *interp, int argc, const char *a
 	return TCL_OK;
 }
 
-#define FLAG(name) \
-	if (!strcmp(argv[i], "-" #name)) { \
-		name##_flag = true; \
-		continue; \
-	} \
+#define FLAG(name)                                                                                                                                   \
+	if (!strcmp(argv[i], "-" #name)) {                                                                                                           \
+		name##_flag = true;                                                                                                                  \
+		continue;                                                                                                                            \
+	}
 
-#define FLAG2(name) \
-	if (!strcmp(Tcl_GetString(objv[i]), "-" #name)) { \
-		name##_flag = true; \
-		continue; \
-	} \
+#define FLAG2(name)                                                                                                                                  \
+	if (!strcmp(Tcl_GetString(objv[i]), "-" #name)) {                                                                                            \
+		name##_flag = true;                                                                                                                  \
+		continue;                                                                                                                            \
+	}
 
-#define ERROR(str) \
-	{ \
-		Tcl_SetResult(interp, (char *)(str), TCL_STATIC); \
-		return TCL_ERROR; \
+#define ERROR(str)                                                                                                                                   \
+	{                                                                                                                                            \
+		Tcl_SetResult(interp, (char *)(str), TCL_STATIC);                                                                                    \
+		return TCL_ERROR;                                                                                                                    \
 	}
 
 bool const_to_mp_int(const Const &a, mp_int *b, bool force_signed, bool force_unsigned)
@@ -171,9 +168,7 @@ bool const_to_mp_int(const Const &a, mp_int *b, bool force_signed, bool force_un
 	if (mp_init(b))
 		return false;
 
-	bool negative = ((a.flags & RTLIL::CONST_FLAG_SIGNED) || force_signed) &&
-					!force_unsigned &&
-					!a.empty() && (a.back() == RTLIL::S1);
+	bool negative = ((a.flags & RTLIL::CONST_FLAG_SIGNED) || force_signed) && !force_unsigned && !a.empty() && (a.back() == RTLIL::S1);
 
 	for (int i = a.size() - 1; i >= 0; i--) {
 		if (mp_mul_2d(b, 1, b)) {
@@ -245,11 +240,9 @@ static int tcl_get_attr(ClientData, Tcl_Interp *interp, int argc, const char *ar
 		break;
 	}
 
-	if ((mod_flag && i != argc - 2) ||
-			(!mod_flag && i != argc - 3) ||
-			(string_flag + int_flag + sint_flag + uint_flag + bool_flag > 1))
+	if ((mod_flag && i != argc - 2) || (!mod_flag && i != argc - 3) || (string_flag + int_flag + sint_flag + uint_flag + bool_flag > 1))
 		ERROR("bad usage: expected \"get_attr -mod [-string|-int|-sint|-uint|-bool] <module> <attrname>\""
-			  " or \"get_attr [-string|-int|-sint|-uint|-bool] <module> <identifier> <attrname>\"")
+		      " or \"get_attr [-string|-int|-sint|-uint|-bool] <module> <identifier> <attrname>\"")
 
 	IdString mod_id, obj_id, attr_id;
 	mod_id = RTLIL::escape_id(argv[i++]);
@@ -278,7 +271,7 @@ static int tcl_get_attr(ClientData, Tcl_Interp *interp, int argc, const char *ar
 		ERROR("object not found")
 
 	if (string_flag) {
-		Tcl_SetResult(interp, (char *) obj->get_string_attribute(attr_id).c_str(), TCL_VOLATILE);
+		Tcl_SetResult(interp, (char *)obj->get_string_attribute(attr_id).c_str(), TCL_VOLATILE);
 	} else if (int_flag || uint_flag || sint_flag) {
 		if (!obj->has_attribute(attr_id))
 			ERROR("attribute missing (required for -int)");
@@ -294,7 +287,7 @@ static int tcl_get_attr(ClientData, Tcl_Interp *interp, int argc, const char *ar
 		if (!obj->has_attribute(attr_id))
 			ERROR("attribute missing (required unless -bool or -string)")
 
-		Tcl_SetResult(interp, (char *) obj->attributes.at(attr_id).as_string().c_str(), TCL_VOLATILE);
+		Tcl_SetResult(interp, (char *)obj->attributes.at(attr_id).as_string().c_str(), TCL_VOLATILE);
 	}
 
 	return TCL_OK;
@@ -309,10 +302,9 @@ static int tcl_has_attr(ClientData, Tcl_Interp *interp, int argc, const char *ar
 		break;
 	}
 
-	if ((mod_flag && i != argc - 2) ||
-			(!mod_flag && i != argc - 3))
+	if ((mod_flag && i != argc - 2) || (!mod_flag && i != argc - 3))
 		ERROR("bad usage: expected \"has_attr -mod <module> <attrname>\""
-			  " or \"has_attr <module> <identifier> <attrname>\"")
+		      " or \"has_attr <module> <identifier> <attrname>\"")
 
 	IdString mod_id, obj_id, attr_id;
 	mod_id = RTLIL::escape_id(argv[i++]);
@@ -340,7 +332,7 @@ static int tcl_has_attr(ClientData, Tcl_Interp *interp, int argc, const char *ar
 	if (!obj)
 		ERROR("object not found")
 
-	Tcl_SetResult(interp, (char *) std::to_string(obj->has_attribute(attr_id)).c_str(), TCL_VOLATILE);
+	Tcl_SetResult(interp, (char *)std::to_string(obj->has_attribute(attr_id)).c_str(), TCL_VOLATILE);
 	return TCL_OK;
 }
 
@@ -361,11 +353,11 @@ static int tcl_set_attr(ClientData, Tcl_Interp *interp, int objc, Tcl_Obj *const
 	}
 
 	if ((i != objc - (2 + !mod_flag + !(true_flag || false_flag))) ||
-			(string_flag + sint_flag + uint_flag + bool_flag + true_flag + false_flag > 1))
+	    (string_flag + sint_flag + uint_flag + bool_flag + true_flag + false_flag > 1))
 		ERROR("bad usage: expected \"set_attr -mod [-string|-sint|-uint|-bool] <module> <attrname> <value>\""
-			  " or \"set_attr [-string|-sint|-uint|-bool] <module> <identifier> <attrname> <value>\""
-			  " or \"set_attr [-true|-false] <module> <identifier> <attrname>\""
-			  " or \"set_attr -mod [-true|-false| <module> <attrname>\"")
+		      " or \"set_attr [-string|-sint|-uint|-bool] <module> <identifier> <attrname> <value>\""
+		      " or \"set_attr [-true|-false] <module> <identifier> <attrname>\""
+		      " or \"set_attr -mod [-true|-false| <module> <attrname>\"")
 
 	IdString mod_id, obj_id, attr_id;
 	mod_id = RTLIL::escape_id(Tcl_GetString(objv[i++]));
@@ -441,8 +433,7 @@ static int tcl_get_param(ClientData, Tcl_Interp *interp, int argc, const char *a
 		break;
 	}
 
-	if ((i != argc - 3) ||
-			(string_flag + int_flag > 1))
+	if ((i != argc - 3) || (string_flag + int_flag > 1))
 		ERROR("bad usage: expected \"get_param [-string|-int|-sint|-uint] <module> <cellid> <paramname>")
 
 	IdString mod_id, cell_id, param_id;
@@ -464,14 +455,14 @@ static int tcl_get_param(ClientData, Tcl_Interp *interp, int argc, const char *a
 	const RTLIL::Const &value = cell->getParam(param_id);
 
 	if (string_flag) {
-		Tcl_SetResult(interp, (char *) value.decode_string().c_str(), TCL_VOLATILE);
+		Tcl_SetResult(interp, (char *)value.decode_string().c_str(), TCL_VOLATILE);
 	} else if (int_flag || uint_flag || sint_flag) {
 		mp_int value_mp;
 		if (!const_to_mp_int(value, &value_mp, sint_flag, uint_flag))
 			ERROR("bignum manipulation failed");
 		Tcl_SetObjResult(interp, Tcl_NewBignumObj(&value_mp));
 	} else {
-		Tcl_SetResult(interp, (char *) value.as_string().c_str(), TCL_VOLATILE);
+		Tcl_SetResult(interp, (char *)value.as_string().c_str(), TCL_VOLATILE);
 	}
 	return TCL_OK;
 }
@@ -487,8 +478,7 @@ static int tcl_set_param(ClientData, Tcl_Interp *interp, int objc, Tcl_Obj *cons
 		break;
 	}
 
-	if ((i != objc - 4) ||
-			(string_flag + sint_flag + uint_flag > 1))
+	if ((i != objc - 4) || (string_flag + sint_flag + uint_flag > 1))
 		ERROR("bad usage: expected \"set_param [-string|-sint|-uint] <module> <cellid> <paramname> <value>")
 
 	IdString mod_id, cell_id, param_id;
@@ -534,8 +524,8 @@ static int tcl_set_param(ClientData, Tcl_Interp *interp, int objc, Tcl_Obj *cons
 
 int yosys_tcl_iterp_init(Tcl_Interp *interp)
 {
-	if (Tcl_Init(interp)!=TCL_OK)
-		log_warning("Tcl_Init() call failed - %s\n",Tcl_ErrnoMsg(Tcl_GetErrno()));
+	if (Tcl_Init(interp) != TCL_OK)
+		log_warning("Tcl_Init() call failed - %s\n", Tcl_ErrnoMsg(Tcl_GetErrno()));
 	Tcl_CreateCommand(interp, "yosys", tcl_yosys_cmd, NULL, NULL);
 	Tcl_CreateCommand(interp, "rtlil::get_attr", tcl_get_attr, NULL, NULL);
 	Tcl_CreateCommand(interp, "rtlil::has_attr", tcl_has_attr, NULL, NULL);
@@ -563,11 +553,11 @@ int yosys_tcl_iterp_init(Tcl_Interp *interp)
 	// unpack
 	// pack
 
-	// Note (dev jf 24-12-02): Make log_id escape everything that’s not a valid 
+	// Note (dev jf 24-12-02): Make log_id escape everything that’s not a valid
 	// verilog identifier before adding any tcl API that returns IdString values
 	// to avoid -option injection
 
-	return TCL_OK ;
+	return TCL_OK;
 }
 #endif
 

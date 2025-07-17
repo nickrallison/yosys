@@ -310,7 +310,7 @@ if (ENABLE_LIBYOSYS)
 endif()
 
 add_executable(yosys_exe
-    kernel/driver.cc
+    kernel/app/driver.cc
     $<TARGET_OBJECTS:yosys_obj>
 )
 target_link_libraries(yosys_exe PUBLIC yosys_obj)

@@ -97,14 +97,14 @@ static std::vector<IdString> get_path(const json11::Json &json)
 	for (auto &path_item : json.array_items()) {
 		auto const &path_item_str = path_item.string_value();
 		if (path_item_str.empty())
-			return {};;
+			return {};
+		;
 		result.push_back(path_item_str);
 	}
 	return result;
 }
 
-ReadWitness::ReadWitness(const std::string &filename) :
-	filename(filename)
+ReadWitness::ReadWitness(const std::string &filename) : filename(filename)
 {
 	std::ifstream f(filename.c_str());
 	if (f.fail() || GetSize(filename) == 0)
@@ -193,12 +193,20 @@ RTLIL::Const ReadWitness::get_bits(int t, int bits_offset, int width) const
 	for (int i = read_begin, j = 0; i > read_end; i--, j++) {
 		RTLIL::State bit = State::Sa;
 		switch (bits[i]) {
-			case '0': bit = State::S0; break;
-			case '1': bit = State::S1; break;
-			case 'x': bit = State::Sx; break;
-			case '?': bit = State::Sa; break;
-			default:
-				log_abort();
+		case '0':
+			bit = State::S0;
+			break;
+		case '1':
+			bit = State::S1;
+			break;
+		case 'x':
+			bit = State::Sx;
+			break;
+		case '?':
+			bit = State::Sa;
+			break;
+		default:
+			log_abort();
 		}
 		result.bits()[j] = bit;
 	}
