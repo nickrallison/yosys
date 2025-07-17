@@ -14,7 +14,7 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.cc.in ${CMAKE_CURRENT_BINARY_DIR}/version.cc)
 set_property(SOURCE src/log.cc APPEND PROPERTY COMPILE_DEFINITIONS YOSYS_SRC="${PROJECT_SOURCE_DIR}")
 
-add_library(yosys_kernel OBJECT)
+add_library(yosys_kernel STATIC)
 
 target_sources(
     yosys_kernel
@@ -99,19 +99,52 @@ if (ENABLE_ZLIB)
     )
 endif()
 
-# add_dependencies(yosys_kernel yosys_techlib_common)
-
-# Install headers using file sets (CMake 3.23+)
-install(TARGETS yosys_kernel
-        FILE_SET HEADERS
-        DESTINATION include/yosys/kernel)
-
 target_include_directories(yosys_kernel
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include/yosys/kernel>
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+target_link_libraries(yosys_kernel 
+    PUBLIC 
+        yosys_libs
+
+        yosys_frontends_ast
+        yosys_frontends_rtlil 
+        yosys_frontends_rtlil_gen
+        yosys_frontends_verilog
+        yosys_frontends_verilog_gen
+
+        yosys_backends_rtlil
 )
+
+if (ENABLE_READLINE)
+    target_link_libraries(yosys_kernel  PUBLIC ${READLINE_LIBRARY})
+endif()
+
+if (ENABLE_EDITLINE)
+    target_link_libraries(yosys_kernel  PUBLIC ${EDITLINE_LIBRARY})
+endif()
+
+if (ENABLE_TCL)
+    target_include_directories(yosys_kernel  PUBLIC ${TCL_INCLUDE_PATH})
+    target_link_libraries(yosys_kernel  PUBLIC ${TCL_LIBRARY})
+endif()
+
+if (ENABLE_ZLIB)
+    target_link_libraries(yosys_kernel PUBLIC ZLIB::ZLIB)
+endif()
+
+if (ENABLE_PLUGINS)
+    target_include_directories(yosys_kernel PUBLIC ${LIBFFI_INCLUDE_DIR})
+    target_link_libraries(yosys_kernel PUBLIC ${LIBFFI_LIBRARY})
+endif()
+
+install(TARGETS yosys_kernel
+        FILE_SET HEADERS
+        DESTINATION include/yosys/kernel)
+
 target_link_libraries(yosys_obj PUBLIC yosys_kernel)
-target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_kernel>)
+
+# target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_kernel>)

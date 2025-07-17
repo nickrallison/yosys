@@ -2,11 +2,11 @@ flex_target(RTLIL_LEXER "rtlil_lexer.l" "${CMAKE_CURRENT_BINARY_DIR}/rtlil_lexer
 bison_target(RTLIL_PARSER "rtlil_parser.y" "${CMAKE_CURRENT_BINARY_DIR}/rtlil_parser.tab.cc" DEFINES_FILE "${CMAKE_CURRENT_BINARY_DIR}/rtlil_parser.tab.hh" COMPILE_FLAGS "-d -r all")
 
 
-add_library(yosys_frontends_rtlil OBJECT
+add_library(yosys_frontends_rtlil STATIC
     rtlil_frontend.cc
 )
 
-add_library(yosys_frontends_rtlil_gen OBJECT
+add_library(yosys_frontends_rtlil_gen STATIC
     #${CMAKE_CURRENT_BINARY_DIR}/rtlil_lexer.cc
     #${CMAKE_CURRENT_BINARY_DIR}/rtlil_parser.tab.cc
     #${CMAKE_CURRENT_BINARY_DIR}/rtlil_parser.tab.hh
@@ -17,5 +17,5 @@ target_link_libraries(yosys_obj PUBLIC yosys_frontends_rtlil yosys_frontends_rtl
 target_link_libraries(yosys_frontends_rtlil_gen PUBLIC yosys_kernel)
 target_link_libraries(yosys_frontends_rtlil PUBLIC yosys_kernel)
 
-target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_frontends_rtlil>)
-target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_frontends_rtlil_gen>)
+# target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_frontends_rtlil>)
+# target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_frontends_rtlil_gen>)

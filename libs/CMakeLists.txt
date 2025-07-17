@@ -47,11 +47,20 @@ add_library(yosys_libs OBJECT
     minisat/System.h
     minisat/Vec.h
     minisat/XAlloc.h
-
-    subcircuit/subcircuit.cc
-    subcircuit/subcircuit.h
-
+    
     cxxopts/include/cxxopts.hpp
+)
+
+target_sources(yosys_kernel 
+    PRIVATE
+        subcircuit/subcircuit.cc
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/subcircuit
+        FILES
+            subcircuit/subcircuit.h
+
 )
 
 if (ENABLE_ZLIB)
@@ -68,5 +77,4 @@ target_sources(yosys_libs PRIVATE
 endif()
 
 target_link_libraries(yosys_obj PUBLIC yosys_libs)
-target_link_libraries(yosys_libs PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_libs>)
