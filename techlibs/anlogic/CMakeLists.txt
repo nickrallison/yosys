@@ -7,6 +7,7 @@ add_library(yosys_techlibs_anlogic OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_anlogic)
+target_link_libraries(yosys_techlibs_anlogic PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_anlogic>)
 
 add_share_file("share/anlogic" "cells_map.v")

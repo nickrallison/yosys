@@ -41,7 +41,7 @@
 #include <string.h>
 #include "frontends/verilog/verilog_frontend.h"
 #include "frontends/verilog/verilog_parser.tab.hh"
-#include "kernel/log.h"
+#include "log.h"
 
 #define YYLEX_PARAM &yylval, &yylloc
 

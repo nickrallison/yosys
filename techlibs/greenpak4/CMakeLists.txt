@@ -6,6 +6,7 @@ add_library(yosys_techlibs_greenpak4 OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_greenpak4)
+target_link_libraries(yosys_techlibs_greenpak4 PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_greenpak4>)
 
 add_share_file("share/greenpak4" "cells_blackbox.v")

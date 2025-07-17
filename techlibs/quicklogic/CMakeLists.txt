@@ -48,6 +48,7 @@ add_custom_target(yosys_techlibs_quicklogic_gen
 add_dependencies(yosys_obj yosys_techlibs_quicklogic_gen)
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_quicklogic)
+target_link_libraries(yosys_techlibs_quicklogic PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_quicklogic>)
 
 add_share_file("share/quicklogic/common" "common/cells_sim.v")

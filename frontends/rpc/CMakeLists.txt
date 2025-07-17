@@ -6,5 +6,6 @@ if (NOT DISABLE_SPAWN)
     )
 
     target_link_libraries(yosys_obj PUBLIC yosys_frontends_rpc)
+target_link_libraries(yosys_frontends_rpc PUBLIC yosys_kernel)
     target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_frontends_rpc>)
 endif()

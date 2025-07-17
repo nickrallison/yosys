@@ -5,4 +5,5 @@ add_library(yosys_backends_table OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_backends_table)
+target_link_libraries(yosys_backends_table PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_backends_table>)

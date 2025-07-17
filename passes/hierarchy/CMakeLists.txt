@@ -8,4 +8,5 @@ add_library(yosys_passes_hierarchy OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_passes_hierarchy)
+target_link_libraries(yosys_passes_hierarchy PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_passes_hierarchy>)

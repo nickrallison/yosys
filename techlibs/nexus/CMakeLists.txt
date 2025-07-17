@@ -5,6 +5,7 @@ add_library(yosys_techlibs_nexus OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_nexus)
+target_link_libraries(yosys_techlibs_nexus PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_nexus>)
 
 add_share_file("share/nexus" "cells_map.v")

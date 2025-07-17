@@ -68,4 +68,5 @@ target_sources(yosys_libs PRIVATE
 endif()
 
 target_link_libraries(yosys_obj PUBLIC yosys_libs)
+target_link_libraries(yosys_libs PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_libs>)

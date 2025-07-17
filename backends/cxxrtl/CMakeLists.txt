@@ -5,6 +5,7 @@ add_library(yosys_backends_cxxrtl OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_backends_cxxrtl)
+target_link_libraries(yosys_backends_cxxrtl PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_backends_cxxrtl>)
 
 add_include_file("backends/cxxrtl/runtime/cxxrtl" "runtime/cxxrtl/cxxrtl.h")

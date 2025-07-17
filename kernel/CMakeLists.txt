@@ -99,7 +99,7 @@ if (ENABLE_ZLIB)
     )
 endif()
 
-add_dependencies(yosys_kernel yosys_techlib_common)
+# add_dependencies(yosys_kernel yosys_techlib_common)
 
 # Install headers using file sets (CMake 3.23+)
 install(TARGETS yosys_kernel

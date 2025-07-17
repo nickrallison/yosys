@@ -54,11 +54,24 @@ if (ENABLE_ABC)
 endif()
 
 target_link_libraries(yosys_obj PUBLIC yosys_passes_techmap)
+target_link_libraries(yosys_passes_techmap PUBLIC yosys_kernel)
+
+target_include_directories(yosys_passes_techmap
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/yosys/passes/techmap>
+    # PRIVATE
+    #     ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_passes_techmap>)
 
 if (NOT DISABLE_SPAWN)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
-    add_executable(yosys-filterlib filterlib.cc)
+    add_executable(yosys-filterlib filterlib.cc
+        $<TARGET_OBJECTS:yosys_kernel>)
+    target_link_libraries(yosys-filterlib PUBLIC yosys_kernel)
     install(TARGETS yosys-filterlib
             RUNTIME DESTINATION .)
 endif()

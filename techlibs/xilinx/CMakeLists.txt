@@ -6,6 +6,7 @@ add_library(yosys_techlibs_xilinx OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_xilinx)
+target_link_libraries(yosys_techlibs_xilinx PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_xilinx>)
 
 add_share_file("share/xilinx" "cells_map.v")

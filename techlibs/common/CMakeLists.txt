@@ -20,15 +20,22 @@ add_custom_target(yosys_techlib_common_gen DEPENDS
 	${CMAKE_CURRENT_BINARY_DIR}/simcells_help.inc
 )
 
-add_library(yosys_techlib_common OBJECT
+target_sources(yosys_kernel PRIVATE
     synth.cc
     prep.cc
 )
 
-add_dependencies(yosys_techlib_common yosys_techlib_common_gen)
+target_include_directories(yosys_kernel
+	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+		$<INSTALL_INTERFACE:include>
+)
 
-target_link_libraries(yosys_obj PUBLIC yosys_techlib_common)
-target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlib_common>)
+add_dependencies(yosys_kernel yosys_techlib_common_gen)
+
+# target_link_libraries(yosys_obj PUBLIC yosys_techlib_common)
+# target_link_libraries(yosys_techlib_common PUBLIC yosys_kernel)
+# target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlib_common>)
 
 add_share_file("share" "simlib.v")
 add_share_file("share" "simcells.v")

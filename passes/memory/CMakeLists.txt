@@ -18,4 +18,5 @@ add_library(yosys_passes_memory OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_passes_memory)
+target_link_libraries(yosys_passes_memory PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_passes_memory>)

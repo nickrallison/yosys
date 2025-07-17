@@ -5,6 +5,7 @@ add_library(yosys_techlibs_gowin OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_gowin)
+target_link_libraries(yosys_techlibs_gowin PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_gowin>)
 
 add_share_file("share/gowin" "cells_map.v")

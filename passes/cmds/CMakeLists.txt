@@ -61,4 +61,5 @@ target_sources(yosys_passes_cmds PRIVATE
 endif()
 
 target_link_libraries(yosys_obj PUBLIC yosys_passes_cmds)
+target_link_libraries(yosys_passes_cmds PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_passes_cmds>)

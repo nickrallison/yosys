@@ -352,9 +352,9 @@ with open(outfile, "w") as f:
     print("", file=f)
 
     if genhdr:
-        print("#include \"kernel/yosys.h\"", file=f)
-        print("#include \"kernel/sigtools.h\"", file=f)
-        print("#include \"kernel/utils.h\"", file=f)
+        print("#include \"yosys.h\"", file=f)
+        print("#include \"sigtools.h\"", file=f)
+        print("#include \"utils.h\"", file=f)
         print("", file=f)
         print("YOSYS_NAMESPACE_BEGIN", file=f)
         print("", file=f)

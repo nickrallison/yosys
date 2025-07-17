@@ -15,4 +15,5 @@ add_library(yosys_passes_equiv OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_passes_equiv)
+target_link_libraries(yosys_passes_equiv PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_passes_equiv>)

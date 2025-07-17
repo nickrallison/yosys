@@ -5,4 +5,5 @@ add_library(yosys_backends_edif OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_backends_edif)
+target_link_libraries(yosys_backends_edif PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_backends_edif>)

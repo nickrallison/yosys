@@ -5,4 +5,5 @@ add_library(yosys_techlibs_easic OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_easic)
+target_link_libraries(yosys_techlibs_easic PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_easic>)

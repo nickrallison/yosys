@@ -5,6 +5,7 @@ add_library(yosys_techlibs_intel OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_intel)
+target_link_libraries(yosys_techlibs_intel PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_intel>)
 
 add_share_file("share/intel/common" "common/m9k_bb.v")

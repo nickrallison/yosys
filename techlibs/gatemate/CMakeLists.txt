@@ -19,6 +19,7 @@ target_sources(yosys_techlibs_gatemate PRIVATE
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_techlibs_gatemate)
+target_link_libraries(yosys_techlibs_gatemate PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_techlibs_gatemate>)
 
 add_share_file("share/gatemate" "reg_map.v")

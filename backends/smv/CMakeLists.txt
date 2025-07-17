@@ -5,4 +5,5 @@ add_library(yosys_backends_smv OBJECT
 )
 
 target_link_libraries(yosys_obj PUBLIC yosys_backends_smv)
+target_link_libraries(yosys_backends_smv PUBLIC yosys_kernel)
 target_sources(yosys_obj PUBLIC $<TARGET_OBJECTS:yosys_backends_smv>)

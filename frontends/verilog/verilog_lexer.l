@@ -41,7 +41,7 @@
 #pragma clang diagnostic ignored "-Wmisleading-indentation"
 #endif
 
-#include "kernel/log.h"
+#include "log.h"
 #include "frontends/verilog/verilog_frontend.h"
 #include "frontends/ast/ast.h"
 #include "verilog_parser.tab.hh"
