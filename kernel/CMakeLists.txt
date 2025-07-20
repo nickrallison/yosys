@@ -109,12 +109,11 @@ target_include_directories(yosys_kernel
 target_link_libraries(yosys_kernel 
     PUBLIC 
         yosys_libs
-
+    PRIVATE
         yosys_frontends_ast
         yosys_frontends_rtlil 
         yosys_frontends_rtlil_gen
         yosys_frontends_verilog
-        yosys_frontends_verilog_gen
 
         yosys_backends_rtlil
 )
