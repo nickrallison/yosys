@@ -305,13 +305,13 @@ if (ENABLE_LIBYOSYS)
     PUBLIC 
         yosys_libs
         yosys_obj
-    PRIVATE
-        yosys_frontends_ast
-        yosys_frontends_rtlil 
-        yosys_frontends_rtlil_gen
-        yosys_frontends_verilog
+    # PRIVATE
+    #     yosys_frontends_ast
+    #     yosys_frontends_rtlil 
+    #     yosys_frontends_rtlil_gen
+    #     yosys_frontends_verilog
 
-        yosys_backends_rtlil
+    #     yosys_backends_rtlil
 )
     # set_target_properties(yosys_shared PROPERTIES OUTPUT_NAME yosys)
     install(TARGETS yosys_shared
@@ -325,15 +325,15 @@ add_executable(yosys_exe
 
 target_link_libraries(yosys_exe
     PUBLIC 
-        yosys_libs
+        # yosys_libs
         yosys_obj
-    PRIVATE
-        yosys_frontends_ast
-        yosys_frontends_rtlil 
-        yosys_frontends_rtlil_gen
-        yosys_frontends_verilog
+    # PRIVATE
+    #     yosys_frontends_ast
+    #     yosys_frontends_rtlil 
+    #     yosys_frontends_rtlil_gen
+    #     yosys_frontends_verilog
 
-        yosys_backends_rtlil
+    #     yosys_backends_rtlil
 )
 
 set_target_properties(yosys_exe PROPERTIES OUTPUT_NAME yosys)

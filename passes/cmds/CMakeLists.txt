@@ -1,10 +1,9 @@
 
 
-add_library(yosys_passes_cmds STATIC)
+add_library(yosys_passes_cmds INTERFACE)
 
-target_sources(
-    yosys_kernel
-    PRIVATE
+target_sources(yosys_kernel
+    INTERFACE
         add.cc
         delete.cc
         design.cc
@@ -58,17 +57,16 @@ target_sources(
 )
 
 if (NOT DISABLE_SPAWN)
-target_sources(yosys_passes_cmds PRIVATE
+target_sources(yosys_passes_cmds INTERFACE
     exec.cc
     bugpoint.cc
 )
 endif()
 
-target_link_libraries(yosys_passes_cmds
-    PRIVATE
-        yosys_backends_verilog
-        yosys_passes_techmap
-)
+# target_link_libraries(yosys_passes_cmds
+#     INTERFACE
+#         yosys_backends_verilog
+#         yosys_passes_techmap
+# )
 
-target_link_libraries(yosys_obj PUBLIC yosys_passes_cmds)
-target_link_libraries(yosys_passes_cmds PUBLIC yosys_kernel)
+target_link_libraries(yosys_kernel PUBLIC yosys_passes_cmds)

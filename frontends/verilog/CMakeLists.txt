@@ -6,7 +6,7 @@ add_custom_target(yosys_frontends_verilog_gen DEPENDS
     ${BISON_VERILOG_PARSER_OUTPUTS}
 )
 
-add_library(yosys_frontends_verilog STATIC
+add_library(yosys_frontends_verilog INTERFACE
     const2ast.cc
     preproc.cc
     verilog_frontend.cc
@@ -17,11 +17,12 @@ add_library(yosys_frontends_verilog STATIC
 add_dependencies(yosys_frontends_verilog yosys_frontends_verilog_gen)
 
 target_include_directories(yosys_frontends_verilog
-    PUBLIC
+    INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(yosys_obj PUBLIC yosys_frontends_verilog)
-target_link_libraries(yosys_frontends_verilog PUBLIC yosys_kernel)
+target_link_libraries(yosys_kernel INTERFACE yosys_frontends_verilog)
+# target_link_libraries(yosys_frontends_verilog INTERFACEyosys_kernel)
 

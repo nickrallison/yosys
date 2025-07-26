@@ -50,7 +50,7 @@ __pycache__
 /result
 /dist
 /*.egg-info
-/build
+/build*
 /venv
 /boost
 /ffi

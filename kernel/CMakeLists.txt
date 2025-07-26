@@ -14,7 +14,7 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.cc.in ${CMAKE_CURRENT_BINARY_DIR}/version.cc)
 set_property(SOURCE src/log.cc APPEND PROPERTY COMPILE_DEFINITIONS YOSYS_SRC="${PROJECT_SOURCE_DIR}")
 
-add_library(yosys_kernel STATIC)
+add_library(yosys_kernel SHARED)
 
 target_sources(
     yosys_kernel
@@ -116,6 +116,10 @@ target_link_libraries(yosys_kernel
         yosys_frontends_verilog
 
         yosys_backends_rtlil
+        yosys_backends_verilog
+        
+        yosys_passes_techmap
+        yosys_passes_cmds
 )
 
 if (ENABLE_READLINE)

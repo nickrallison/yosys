@@ -1,21 +1,21 @@
 
 
-add_library(yosys_backends_rtlil STATIC)
+add_library(yosys_backends_rtlil INTERFACE)
 
 target_sources(yosys_backends_rtlil
-        PRIVATE
+        INTERFACE
             rtlil_backend.cc
-        PUBLIC
+        INTERFACE
             FILE_SET HEADERS
             FILES
             rtlil_backend.h
     )
 
 target_include_directories(yosys_backends_rtlil
-    PUBLIC
+    INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/yosys/backends/rtlil>
 )
-target_link_libraries(yosys_obj PUBLIC yosys_backends_rtlil)
-target_link_libraries(yosys_backends_rtlil PUBLIC yosys_kernel)
+target_link_libraries(yosys_kernel INTERFACE yosys_backends_rtlil)
+# target_link_libraries(yosys_backends_rtlil INTERFACE yosys_kernel)
 

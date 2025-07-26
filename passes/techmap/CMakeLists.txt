@@ -1,9 +1,9 @@
 
 
-add_library(yosys_passes_techmap STATIC)
+add_library(yosys_passes_techmap INTERFACE)
 
 target_sources(yosys_passes_techmap
-        PRIVATE
+        INTERFACE
             flatten.cc
             techmap.cc
             simplemap.cc
@@ -44,14 +44,14 @@ target_sources(yosys_passes_techmap
             cellmatch.cc
             clockgate.cc
             constmap.cc
-        PUBLIC
+        INTERFACE
             FILE_SET HEADERS
             FILES
                 libparse.h
     )
 
 if (ENABLE_ABC)
-    target_sources(yosys_passes_techmap PRIVATE
+    target_sources(yosys_passes_techmap INTERFACE
         abc.cc
         abc9.cc
         abc9_exe.cc
@@ -60,11 +60,10 @@ if (ENABLE_ABC)
     )
 endif()
 
-target_link_libraries(yosys_obj PUBLIC yosys_passes_techmap)
-target_link_libraries(yosys_passes_techmap PUBLIC yosys_kernel)
+target_link_libraries(yosys_kernel INTERFACE yosys_passes_techmap)
 
 target_include_directories(yosys_passes_techmap
-    PUBLIC
+    INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/yosys/passes/techmap>
 )
@@ -75,6 +74,11 @@ if (NOT DISABLE_SPAWN)
     
     add_executable(yosys-filterlib filterlib.cc)
     target_link_libraries(yosys-filterlib PUBLIC yosys_kernel)
+    target_include_directories(yosys-filterlib
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<INSTALL_INTERFACE:include/yosys/passes/techmap>
+    )
     install(TARGETS yosys-filterlib
             RUNTIME DESTINATION .)
 endif()
