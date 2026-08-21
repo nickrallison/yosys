@@ -93,7 +93,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 check_pie_supported() # opportunistically enable PIE
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-	set(CMAKE_CXX_FLAGS_DEBUG "-Og -ggdb")
+	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -ggdb")
 	set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
@@ -425,6 +425,14 @@ if (NOT YOSYS_BUILD_PYTHON_ONLY)
 	)
 	yosys_link_components(yosys PRIVATE ${driver_components})
 	set_property(TARGET yosys PROPERTY ENABLE_EXPORTS ON)
+	configure_file(
+		${CMAKE_SOURCE_DIR}/misc/yosys-gdb.gdb
+		${CMAKE_BINARY_DIR}/${YOSYS_PROGRAM_PREFIX}yosys${CMAKE_EXECUTABLE_SUFFIX}-gdb.gdb
+		COPYONLY
+	)
+	if (YOSYS_INSTALL_DRIVER)
+		install(FILES ${CMAKE_BINARY_DIR}/${YOSYS_PROGRAM_PREFIX}yosys${CMAKE_EXECUTABLE_SUFFIX}-gdb.gdb DESTINATION ${YOSYS_INSTALL_BINDIR})
+	endif()
 	if (MINGW)
 		target_link_options(yosys PRIVATE -municode LINKER:--export-all-symbols)
 		set_target_properties(yosys PROPERTIES
