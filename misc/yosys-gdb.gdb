@@ -327,6 +327,29 @@ class MemWriteActionPrinter:
         return "MemWriteAction {} [{}] <- {}".format(_id(self.value["memid"]), _signal(self.value["address"]), _signal(self.value["data"]))
 
 
+class AstNodePrinter:
+    def __init__(self, value):
+        self.value = value
+
+    def to_string(self):
+        node_type = str(self.value["type"]).rsplit("::", 1)[-1]
+        string = _string(self.value["str"])
+        children = _vector_size(self.value["children"])
+        suffix = " {}".format(string) if string else ""
+        return "{}{} ({} children)".format(node_type, suffix, children)
+
+    def children(self):
+        yield "type", self.value["type"]
+        yield "str", self.value["str"]
+        yield "bits", self.value["bits"]
+        yield "integer", self.value["integer"]
+        yield "realvalue", self.value["realvalue"]
+        yield "children", self.value["children"]
+        yield "attributes", self.value["attributes"]
+        yield "dimensions", self.value["dimensions"]
+        yield "location", self.value["location"]
+
+
 class HashContainerPrinter:
     def __init__(self, value, kind):
         self.value = value
@@ -371,6 +394,7 @@ printers.add_printer("CaseRule", r"^Yosys::RTLIL::CaseRule$", CaseRulePrinter)
 printers.add_printer("SwitchRule", r"^Yosys::RTLIL::SwitchRule$", SwitchRulePrinter)
 printers.add_printer("SyncRule", r"^Yosys::RTLIL::SyncRule$", SyncRulePrinter)
 printers.add_printer("MemWriteAction", r"^Yosys::RTLIL::MemWriteAction$", MemWriteActionPrinter)
+printers.add_printer("AstNode", r"^Yosys::AST::AstNode$", AstNodePrinter)
 printers.add_printer("dict", r"^Yosys::hashlib::dict<.*>$", Factory(HashContainerPrinter, "dict"))
 printers.add_printer("pool", r"^Yosys::hashlib::pool<.*>$", Factory(HashContainerPrinter, "pool"))
 gdb.printing.register_pretty_printer(None, printers, replace=True)
