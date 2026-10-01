@@ -2,6 +2,10 @@ import gdb
 import gdb.printing
 import sys
 
+# /usr/share/gcc/python/libstdcxx/v6/printers.py
+sys.path.insert(0, '/usr/share/gcc/python')
+from libstdcxx.v6.printers import register_libstdcxx_printers
+register_libstdcxx_printers (None)
 
 class IdStringPrinter:
     _calling = False
