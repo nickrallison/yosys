@@ -1,0 +1,36 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug with ASan and UBSan",
+      "binaryDir": "${sourceDir}/build-sanitize",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_BUILD_TYPE": "Sanitize",
+        "SANITIZE": "address,undefined,local-bounds,float-divide-by-zero",
+        "CMAKE_C_FLAGS": "-g",
+        "CMAKE_CXX_FLAGS": "-g",
+        "CMAKE_C_FLAGS_SANITIZE": "-O0 -fno-inline -fno-omit-frame-pointer -fno-optimize-sibling-calls",
+        "CMAKE_CXX_FLAGS_SANITIZE": "-O0 -fno-inline -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+      }
+    },
+    {
+      "name": "optdbg",
+      "displayName": "Release with debug info",
+      "binaryDir": "${sourceDir}/build-optdbg",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "binaryDir": "${sourceDir}/build-rel",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}
